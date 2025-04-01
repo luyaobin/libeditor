@@ -1,0 +1,36 @@
+pipeline {
+    agent {
+        node {
+            label "firmware"
+        }
+    }
+    stages {
+        stage('Prepare') {
+            steps {
+                echo "Prepare"
+            }
+        }
+        stage('ChangeLog') {
+            steps {
+                echo "ChangeLog"
+            }
+        }
+        stage("Fetch Resouce") {
+            steps {
+                echo "Fetch Resource"
+            }
+        }
+        stage("Build") {
+            steps {
+                echo "Build!"
+                sh "bash deploy.sh"   
+            }
+        }
+        stage("Deploy") {
+            steps {
+                echo "Deploy!"
+            }
+        }
+    }
+}
+
