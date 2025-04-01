@@ -70,6 +70,8 @@ Rectangle {
             "code": "",
             "strValue": "",
             "points": [],
+            "checks": [],
+            "airChecks": [],
             "tags": [],
             "base64": ""
         };
@@ -81,11 +83,11 @@ Rectangle {
     function fixModule(index, code, name, ioNum, lockNum, airNum) {
         const moduleRef = moduleModel.get(index);
         if (index !== -1) {
-            moduleRef.setProperty(index, "code", code);
-            moduleRef.setProperty(index, "name", name);
-            moduleRef.setProperty(index, "ioNum", ioNum);
-            moduleRef.setProperty(index, "lockNum", lockNum);
-            moduleRef.setProperty(index, "airNum", airNum);
+            moduleModel.setProperty(index, "code", code);
+            moduleModel.setProperty(index, "name", name);
+            moduleModel.setProperty(index, "ioNum", ioNum);
+            moduleModel.setProperty(index, "lockNum", lockNum);
+            moduleModel.setProperty(index, "airNum", airNum);
             // 自动创建点位
             const pointsArray = [];
             for (let i = 0; i < ioNum; i++) {
@@ -95,27 +97,43 @@ Rectangle {
                     "ry": 0
                 });
             }
+            const checksArray = [];
             for (let i = 0; i < lockNum; i++) {
-                pointsArray.push({
+                checksArray.push({
+                    "name": "锁点位" + (i + 1),
+                    "rx": 0,
+                    "ry": 0
+                });
+                checksArray.push({
                     "name": "锁点位" + (i + 1),
                     "rx": 0,
                     "ry": 0
                 });
             }
+            const airChecksArray = [];
             for (let i = 0; i < airNum; i++) {
-                pointsArray.push({
+                airChecksArray.push({
+                    "name": "气点位" + (i + 1),
+                    "rx": 0,
+                    "ry": 0
+                });
+                airChecksArray.push({
                     "name": "气点位" + (i + 1),
                     "rx": 0,
                     "ry": 0
                 });
             }
             moduleRef.points.append(pointsArray);
+            moduleRef.checks.append(checksArray);
+            moduleRef.airChecks.append(airChecksArray);
         }
     }
 
     function updateModule(index, module) {
         const tags = [];
         const points = [];
+        const checks = [];
+        const airChecks = [];
         for (let i = 0; i < module.tags.count; i++) {
             tags.push({
                 "tag": module.tags.get(i).tag
@@ -127,6 +145,22 @@ Rectangle {
                 "name": point.name,
                 "rx": point.rx,
                 "ry": point.ry
+            });
+        }
+        for (let i = 0; i < module.checks.count; i++) {
+            const check = module.checks.get(i);
+            checks.push({
+                "name": check.name,
+                "rx": check.rx,
+                "ry": check.ry
+            });
+        }
+        for (let i = 0; i < module.airChecks.count; i++) {
+            const airCheck = module.airChecks.get(i);
+            airChecks.push({
+                "name": airCheck.name,
+                "rx": airCheck.rx,
+                "ry": airCheck.ry
             });
         }
         const result = {
@@ -144,7 +178,9 @@ Rectangle {
             "strValue": module.strValue,
             "points": points,
             "tags": tags,
-            "base64": module.base64
+            "base64": module.base64,
+            "checks": checks,
+            "airChecks": airChecks
         };
         moduleListSettings.setValue(module.uuid, JSON.stringify(result));
         moduleModel.setProperty(index, "uuid", module.uuid);

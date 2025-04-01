@@ -13,10 +13,18 @@ Rectangle {
     property bool isDraggingPoint: false
     property int currentPointIndex: -1
 
+    signal pasteBackground()
+    signal leftTransparent()
+    signal rightTransparent()
     signal pointAdded(string name, int x, int y)
     signal pointMoved(int index, int x, int y)
     signal backgroundChanged(string source)
 
+    onPasteBackground: {
+        qmlSystem.ctrlV();
+        backgroundImage.source = qmlSystem.image;
+        moduleArea.hasBackground = true;
+    }
     color: "#F5F5F5"
     // 粘贴功能
     Keys.onPressed: function(event) {
@@ -41,7 +49,7 @@ Rectangle {
         id: backgroundImage
 
         anchors.fill: parent
-        fillMode: Image.PreserveAspectFit
+        // fillMode: Image.PreserveAspectFit
         visible: source != ""
     }
 

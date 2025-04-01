@@ -21,6 +21,8 @@ QtObject {
     property string code: ""
     property string strValue: ""
     property var points: null
+    property var checks: null
+    property var airChecks: null
     property var tags: null
     property string base64: ""
 
@@ -44,6 +46,8 @@ QtObject {
         code = module.code;
         strValue = module.strValue;
         points = module.points;
+        checks = module.checks;
+        airChecks = module.airChecks;
         tags = module.tags;
         base64 = module.base64 || "";
         // console.log(module);
@@ -60,6 +64,28 @@ QtObject {
         points.append(newPoint);
         console.log("添加点位:", newPoint);
         // 同步到设置
+        saveToSettings();
+    }
+
+    function addCheck(x, y, name) {
+        // 添加新点位
+        var newPoint = {
+            "name": name || "点位" + (points.length + 1),
+            "rx": x,
+            "ry": y
+        };
+        checks.append(newPoint);
+        saveToSettings();
+    }
+
+    function addAirCheck(x, y, name) {
+        // 添加新点位
+        var newPoint = {
+            "name": name || "点位" + (points.length + 1),
+            "rx": x,
+            "ry": y
+        };
+        airChecks.append(newPoint);
         saveToSettings();
     }
 
@@ -91,6 +117,28 @@ QtObject {
         }
     }
 
+    function deleteCheck() {
+        // 删除点位
+        console.log("删除点位:", index, checks.count);
+        if (checks.count > 0) {
+            checks.remove(checks.count - 1);
+            console.log("删除点位:", index);
+            // 同步到设置
+            saveToSettings();
+        }
+    }
+
+    function deleteAirCheck() {
+        // 删除点位
+        console.log("删除点位:", index, airChecks.count);
+        if (airChecks.count > 0) {
+            airChecks.remove(airChecks.count - 1);
+            console.log("删除点位:", index);
+            // 同步到设置
+            saveToSettings();
+        }
+    }
+
     function saveToSettings() {
         // 这里实现保存到设置的逻辑
         // 例如使用 Qt.labs.settings 或其他方法
@@ -109,6 +157,8 @@ QtObject {
             "code": code,
             "strValue": strValue,
             "points": points,
+            "checks": checks,
+            "airChecks": airChecks,
             "tags": tags,
             "base64": base64
         };

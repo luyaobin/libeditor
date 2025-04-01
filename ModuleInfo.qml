@@ -127,186 +127,6 @@ Item {
                 // 模块名称
 
                 Text {
-                    text: "点位代号:"
-                    font.pixelSize: 14
-                    color: "#555555"
-                }
-
-                Rectangle {
-                    Layout.fillWidth: true
-                    height: 32
-                    color: "#f0f7ff"
-                    border.color: "#c0d7ff"
-                    border.width: 1
-                    radius: 4
-
-                    ListView {
-                        anchors.fill: parent
-                        model: moduleData.tags
-                        orientation: ListView.Horizontal
-                        spacing: 5
-                        clip: true
-
-                        delegate: Rectangle {
-                            height: 30
-                            width: 80
-                            radius: 4
-                            color: "#f0f7ff"
-                            border.color: "#c0d7ff"
-
-                            Text {
-                                anchors.centerIn: parent
-                                text: tag
-                                font.pixelSize: 12
-                            }
-
-                        }
-
-                    }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            console.log("点击了");
-                            const tags = [];
-                            for (let i = 0; i < moduleData.tags.count; i++) {
-                                tags.push(moduleData.tags.get(i).tag);
-                            }
-                            editorTagModify.setCallback(tags.join("\n"), function(data) {
-                                const tagsResult = data.split("\n");
-                                const models = [];
-                                console.log("tags", tagsResult);
-                                for (let i = 0; i < tagsResult.length; i++) {
-                                    console.log("tags[i]", tagsResult[i]);
-                                    models.push({
-                                        "tag": tagsResult[i]
-                                    });
-                                }
-                                moduleData.tags.clear();
-                                moduleData.tags.append(models);
-                                console.log("moduleData.tags", moduleData.tags.count);
-                                moduleData.dataChanged();
-                            });
-                            editorTagModify.open();
-                        }
-                    }
-
-                }
-
-                Text {
-                    text: "引脚数量:"
-                    font.pixelSize: 14
-                    color: "#555555"
-                }
-
-                SpinBox {
-                    id: ioNumSpinBox
-
-                    Layout.fillWidth: true
-                    value: moduleData.ioNum
-                    from: 0
-                    to: 99
-                    editable: true
-                    onValueChanged: {
-                        if (banSave)
-                            return ;
-
-                        moduleData.ioNum = value;
-                        moduleData.dataChanged();
-                    }
-
-                    background: Rectangle {
-                        // 移除了导致绑定循环的 implicitWidth: parent.width
-                        width: parent.width
-                        implicitHeight: 30
-                        color: "#f5f7fa"
-                        border.color: parent.focus ? "#4a90e2" : "#c0c4cc"
-                        border.width: parent.focus ? 2 : 1
-                        radius: 4
-                    }
-
-                    contentItem: TextInput {
-                        text: parent.textFromValue(parent.value, parent.locale)
-                        font.pixelSize: 14
-                        color: "#333333"
-                        selectByMouse: true
-                        horizontalAlignment: Qt.AlignHCenter
-                        verticalAlignment: Qt.AlignVCenter
-                    }
-
-                }
-                // 引脚数量
-
-                Text {
-                    text: "锁片对数:"
-                    font.pixelSize: 14
-                    color: "#555555"
-                }
-
-                Row {
-                    Layout.fillWidth: true
-                    spacing: 5
-
-                    Repeater {
-                        model: 7
-
-                        delegate: Rectangle {
-                            width: 30
-                            height: 30
-                            color: index === moduleData.lockNum ? "#c0d7ff" : "#f0f7ff"
-                            border.color: "#c0d7ff"
-                            border.width: 1
-                            radius: 4
-
-                            Text {
-                                anchors.centerIn: parent
-                                text: index
-                                font.pixelSize: 12
-                                color: index === moduleData.lockNum ? "#333333" : "#999999"
-                            }
-
-                            MouseArea {
-                                anchors.fill: parent
-                                onClicked: {
-                                    moduleData.lockNum = index;
-                                    moduleData.dataChanged();
-                                }
-                            }
-
-                        }
-
-                    }
-
-                    Row {
-                        spacing: 5
-
-                        Text {
-                            text: "气密存在:"
-                            font.pixelSize: 14
-                            color: "#555555"
-                            font.family: "Microsoft YaHei"
-                            leftPadding: 5
-                            verticalAlignment: Text.AlignVCenter
-                        }
-
-                        CheckBox {
-                            id: airCheckBox
-
-                            checked: false
-                            onCheckedChanged: {
-                                if (banSave)
-                                    return ;
-
-                                moduleData.airNum = checked ? 1 : 0;
-                                moduleData.dataChanged();
-                            }
-                        }
-
-                    }
-
-                }
-
-                Text {
                     text: "起点点位:"
                     font.pixelSize: 14
                     color: "#555555"
@@ -382,6 +202,73 @@ Item {
 
                 }
 
+                Text {
+                    text: "点位代号:"
+                    font.pixelSize: 14
+                    color: "#555555"
+                }
+
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 32
+                    color: "#f0f7ff"
+                    border.color: "#c0d7ff"
+                    border.width: 1
+                    radius: 4
+
+                    ListView {
+                        anchors.fill: parent
+                        model: moduleData.tags
+                        orientation: ListView.Horizontal
+                        spacing: 5
+                        clip: true
+
+                        delegate: Rectangle {
+                            height: 30
+                            width: 80
+                            radius: 4
+                            color: "#f0f7ff"
+                            border.color: "#c0d7ff"
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: tag
+                                font.pixelSize: 12
+                            }
+
+                        }
+
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            console.log("点击了");
+                            const tags = [];
+                            for (let i = 0; i < moduleData.tags.count; i++) {
+                                tags.push(moduleData.tags.get(i).tag);
+                            }
+                            editorTagModify.setCallback(tags.join("\n"), function(data) {
+                                const tagsResult = data.split("\n");
+                                const models = [];
+                                console.log("tags", tagsResult);
+                                for (let i = 0; i < tagsResult.length; i++) {
+                                    console.log("tags[i]", tagsResult[i]);
+                                    models.push({
+                                        "tag": tagsResult[i]
+                                    });
+                                }
+                                moduleData.tags.clear();
+                                moduleData.tags.append(models);
+                                console.log("moduleData.tags", moduleData.tags.count);
+                                moduleData.dataChanged();
+                            });
+                            editorTagModify.open();
+                        }
+                    }
+
+                }
+
                 Item {
                     Layout.fillWidth: true
                     height: 32
@@ -391,19 +278,24 @@ Item {
                         anchors.fill: parent
                         spacing: 5
 
-                        // 实际点位, 理论点位
-                        Text {
-                            text: "实际点位:"
-                        }
-
-                        Text {
-                            text: "理论点位:"
+                        Button {
+                            text: "粘贴背景"
+                            onClicked: {
+                                moduleArea.pasteBackground();
+                            }
                         }
 
                         Button {
-                            text: "删除尾点"
+                            text: "背景左转"
                             onClicked: {
-                                moduleData.deletePoint();
+                                moduleArea.leftTransparent();
+                            }
+                        }
+
+                        Button {
+                            text: "背景右转"
+                            onClicked: {
+                                moduleArea.rightTransparent();
                             }
                         }
 
@@ -428,6 +320,193 @@ Item {
 
                             anchors.fill: parent
                             points: moduleData.points
+                        }
+
+                    }
+
+                }
+
+                Text {
+                    text: "引脚数量:"
+                    font.pixelSize: 14
+                    color: "#555555"
+                }
+
+                Row {
+                    Layout.fillWidth: true
+                    spacing: 10
+
+                    SpinBox {
+                        id: ioNumSpinBox
+
+                        width: parent.width - addPointButton.width - pointCountText.width - 15
+                        value: moduleData.ioNum
+                        from: 0
+                        to: 99
+                        editable: true
+                        onValueChanged: {
+                            if (banSave)
+                                return ;
+
+                            moduleData.ioNum = value;
+                            moduleData.dataChanged();
+                        }
+
+                        background: Rectangle {
+                            width: parent.width
+                            implicitHeight: 32
+                            color: "#f5f7fa"
+                            border.color: parent.focus ? "#409EFF" : "#dcdfe6"
+                            border.width: parent.focus ? 2 : 1
+                            radius: 6
+                            // 添加轻微阴影效果
+                            layer.enabled: parent.focus
+
+                            layer.effect: DropShadow {
+                                horizontalOffset: 0
+                                verticalOffset: 1
+                                radius: 4
+                                samples: 8
+                                color: "#20000000"
+                            }
+
+                        }
+
+                        contentItem: TextInput {
+                            text: parent.textFromValue(parent.value, parent.locale)
+                            color: "#333333"
+                            selectByMouse: true
+                            horizontalAlignment: Qt.AlignHCenter
+                            verticalAlignment: Qt.AlignVCenter
+
+                            font {
+                                pixelSize: 14
+                                family: "Microsoft YaHei"
+                            }
+
+                        }
+
+                    }
+
+                    Text {
+                        id: pointCountText
+
+                        text: "实际数量: " + (moduleData.points ? moduleData.points.count : 0)
+                        color: "#555555"
+                        anchors.verticalCenter: parent.verticalCenter
+
+                        font {
+                            pixelSize: 14
+                            family: "Microsoft YaHei"
+                        }
+
+                    }
+
+                    Button {
+                        id: addPointButton
+
+                        text: "删除尾点"
+                        implicitHeight: 32
+                        onClicked: {
+                            moduleData.deletePoint();
+                        }
+
+                        background: Rectangle {
+                            color: parent.hovered ? "#f56c6c" : "#fa8c8c"
+                            radius: 6
+
+                            // 添加按钮悬停效果
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
+                        }
+
+                        contentItem: Text {
+                            text: parent.text
+                            color: "white"
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            font {
+                                pixelSize: 14
+                                family: "Microsoft YaHei"
+                                bold: true
+                            }
+
+                        }
+
+                    }
+
+                }
+                // 引脚数量
+
+                Text {
+                    text: "锁片对数:"
+                    font.pixelSize: 14
+                    color: "#555555"
+                }
+
+                Row {
+                    Layout.fillWidth: true
+                    spacing: 5
+
+                    Repeater {
+                        model: 7
+
+                        delegate: Rectangle {
+                            width: 30
+                            height: 30
+                            color: index === moduleData.lockNum ? "#c0d7ff" : "#f0f7ff"
+                            border.color: "#c0d7ff"
+                            border.width: 1
+                            radius: 4
+
+                            Text {
+                                anchors.centerIn: parent
+                                text: index
+                                font.pixelSize: 12
+                                color: index === moduleData.lockNum ? "#333333" : "#999999"
+                            }
+
+                            MouseArea {
+                                anchors.fill: parent
+                                onClicked: {
+                                    moduleData.lockNum = index;
+                                    moduleData.dataChanged();
+                                }
+                            }
+
+                        }
+
+                    }
+
+                    Row {
+                        spacing: 5
+
+                        Text {
+                            text: "气密存在:"
+                            font.pixelSize: 14
+                            color: "#555555"
+                            font.family: "Microsoft YaHei"
+                            leftPadding: 5
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        CheckBox {
+                            id: airCheckBox
+
+                            checked: false
+                            onCheckedChanged: {
+                                if (banSave)
+                                    return ;
+
+                                moduleData.airNum = checked ? 1 : 0;
+                                moduleData.dataChanged();
+                            }
                         }
 
                     }

@@ -50,12 +50,13 @@ Popup {
                 spacing: 20
 
                 ColumnLayout {
+                    // 模块名称标题
+
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Layout.preferredWidth: 4
                     spacing: 10
 
-                    // 模块名称标题
                     Rectangle {
                         Layout.fillWidth: true
                         height: 30
@@ -66,7 +67,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left
                             anchors.leftMargin: 10
-                            text: "模块列表（每行一个模块，格式：模块代码,模块名称,引脚数量,气密存在,锁片数量）"
+                            text: "模块列表（每行一个模块，格式：模块代码,模块名称,引脚数量,锁片数量,气密存在）"
                             font.pixelSize: 14
                             font.bold: true
                             color: "#606266"
@@ -113,6 +114,31 @@ Popup {
                 spacing: 15
 
                 Button {
+                    implicitWidth: 100
+                    implicitHeight: 36
+                    text: "测试数据"
+                    onClicked: {
+                        namesTextArea.text = "A001,温度传感器,1,0,0\nB002,压力传感器,2,1,1";
+                    }
+
+                    background: Rectangle {
+                        color: parent.hovered ? "#e0e0e0" : "#f0f0f0"
+                        border.color: "#dcdfe6"
+                        border.width: 1
+                        radius: 4
+                    }
+
+                    contentItem: Text {
+                        text: parent.text
+                        font.pixelSize: 14
+                        color: "#606266"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                }
+
+                Button {
                     text: "取消"
                     implicitWidth: 100
                     implicitHeight: 36
@@ -148,6 +174,7 @@ Popup {
                         var lines = namesTextArea.text.split('\n');
                         for (var i = 0; i < lines.length; i++) {
                             var line = lines[i].trim();
+                            console.log("line", line);
                             if (line) {
                                 var parts = line.split(',');
                                 if (parts.length >= 2) {
@@ -157,28 +184,30 @@ Popup {
                                     var airNum = 0;
                                     var lockNum = 0;
                                     if (parts.length >= 3)
-                                        ioNum = parts[2].trim();
+                                        ioNum = parseInt(parts[2].trim());
 
                                     if (parts.length >= 4)
-                                        airNum = parts[3].trim();
+                                        lockNum = parseInt(parts[3].trim());
 
                                     if (parts.length >= 5)
-                                        lockNum = parts[4].trim();
+                                        airNum = parseInt(parts[4].trim());
 
                                     if (librariesModel) {
                                         var newModule = librariesModel.addModule();
-                                        if (newModule) {
-                                            newModule.code = moduleCode;
-                                            newModule.name = moduleName;
-                                            newModule.ioNum = ioNum;
-                                            newModule.airNum = airNum;
-                                            newModule.lockNum = lockNum;
-                                            librariesModel.updateModule(newModule.uuid, newModule);
-                                        }
+                                        librariesModel.fixModule(i, moduleCode, moduleName, ioNum, lockNum, airNum);
                                     }
                                 }
                             }
                         }
+                        console.log("MainPage onCompleted");
+                        const size = librariesModel.moduleModel.count;
+                        if (size === 0)
+                            librariesModel.addModule();
+
+                        console.log("MainPage onCompleted", librariesModel.moduleModel.count);
+                        const module = librariesModel.moduleModel.get(0);
+                        console.log("MainPage onCompleted tags", module.tags);
+                        moduleData.selectModule(module, 0);
                         selectLabelPopup.close();
                     }
 
