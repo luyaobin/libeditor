@@ -57,7 +57,13 @@ Rectangle {
                     implicitWidth: 60
                     implicitHeight: 30
                     onClicked: {
-                        pointsArea.pointDeleted(index);
+                        // 发出删除信号，让父组件处理
+
+                        // 使用moduleData的deletePoint函数
+                        if (typeof moduleData.deletePoint === "function")
+                            moduleData.deletePoint(index);
+                        else
+                            pointsArea.pointDeleted(index);
                     }
                 }
 
@@ -99,26 +105,35 @@ Rectangle {
         height: 40
         font.pixelSize: 20
         onClicked: {
-            // 创建一个函数用于添加新点位，可以与ModuleArea联动
-            if (Array.isArray(points)) {
-                // 如果是数组，添加到数组
-                const newPoint = {
-                    "name": "点位" + (points.length + 1),
-                    "rx": 50,
-                    "ry": 50
-                };
-                if (typeof points.push === "function")
-                    points.push(newPoint);
+            // 使用moduleData的addPoint函数添加新点位
+            if (typeof moduleData !== "undefined" && typeof moduleData.addPoint === "function") {
+                // 默认在中心位置添加新点位
+                var centerX = pointsArea.width / 2;
+                var centerY = pointsArea.height / 2;
+                var pointName = "点位" + (Array.isArray(moduleData.points) ? moduleData.points.length + 1 : 1);
+                moduleData.addPoint(parseInt(centerX), parseInt(centerY), pointName);
+            } else {
+                // 兼容旧代码，直接操作数组
+                if (Array.isArray(points)) {
+                    // 如果是数组，添加到数组
+                    const newPoint = {
+                        "name": "点位" + (points.length + 1),
+                        "rx": parseInt(pointsArea.width / 2),
+                        "ry": parseInt(pointsArea.height / 2)
+                    };
+                    if (typeof points.push === "function")
+                        points.push(newPoint);
 
-            } else if (typeof points.count === "number") {
-                // 如果是ListModel，调用append
-                if (typeof points.append === "function")
-                    points.append({
-                        "name": "点位" + (points.count + 1),
-                        "rx": 50,
-                        "ry": 50
-                    });
+                } else if (typeof points.count === "number") {
+                    // 如果是ListModel，调用append
+                    if (typeof points.append === "function")
+                        points.append({
+                            "name": "点位" + (points.count + 1),
+                            "rx": parseInt(pointsArea.width / 2),
+                            "ry": parseInt(pointsArea.height / 2)
+                        });
 
+                }
             }
         }
     }

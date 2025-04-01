@@ -11,6 +11,7 @@ Rectangle {
     property bool hasBackground: backgroundImage.source != ""
     property bool isEditing: true
     property bool isDraggingPoint: false
+    property int currentPointIndex: -1
 
     signal pointAdded(string name, int x, int y)
     signal pointMoved(int index, int x, int y)
@@ -56,12 +57,16 @@ Rectangle {
             width: 10
             height: 10
             radius: 5
-            color: "red"
-            border.color: "black"
-            border.width: 1
+            // color: "red"
+            // border.color: "black"
+            // border.width: 1
             x: model.rx ? model.rx - 5 : 0
             y: model.ry ? model.ry - 5 : 0
             z: 1
+            // 高亮显示选中的点位
+            scale: moduleArea.currentPointIndex === index ? 1.5 : 1
+            border.width: moduleArea.currentPointIndex === index ? 2 : 1
+            border.color: moduleArea.currentPointIndex === index ? "#4a90e2" : "black"
 
             // 显示点位名称
             Text {
@@ -87,8 +92,20 @@ Rectangle {
                         // 更新点位坐标
                         var newX = parseInt(parent.x + 5);
                         var newY = parseInt(parent.y + 5);
-                        moduleData.points.setProperty(index, "rx", newX);
-                        moduleData.points.setProperty(index, "ry", newY);
+                        // 使用updatePoint函数更新坐标
+                        if (typeof moduleData.updatePoint === "function") {
+                            moduleData.updatePoint(index, "rx", newX);
+                            moduleData.updatePoint(index, "ry", newY);
+                        } else {
+                            // 兼容旧代码
+                            if (typeof moduleData.points.setProperty === "function") {
+                                moduleData.points.setProperty(index, "rx", newX);
+                                moduleData.points.setProperty(index, "ry", newY);
+                            } else if (Array.isArray(moduleData.points) && moduleData.points[index]) {
+                                moduleData.points[index].rx = newX;
+                                moduleData.points[index].ry = newY;
+                            }
+                        }
                         moduleArea.pointMoved(index, newX, newY);
                     }
                 }

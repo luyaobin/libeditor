@@ -7,8 +7,6 @@ Rectangle {
     id: librariesRoot
 
     property alias moduleModel: moduleModel
-    property var moduleSettings: ({
-    })
     property var moduleUuids: []
 
     function loadModuleSettings() {
@@ -26,8 +24,6 @@ Rectangle {
             }
         }
         moduleUuids = uuidList;
-        console.log(moduleListSettings.uuidList, uuidList);
-        moduleListSettings.uuidList = uuidList.join(',');
     }
 
     function addModule(module) {
@@ -52,13 +48,44 @@ Rectangle {
         };
         moduleListSettings.setValue(uuid, JSON.stringify(newModule));
         moduleListSettings.uuidList = moduleUuids.join(',');
-        console.log(moduleListSettings.uuidList);
         moduleModel.append(newModule);
     }
 
-    function updateModule(uuid, module) {
-        moduleModel.set(moduleModel.indexOf(module), module);
-        moduleListSettings.setValue(uuid, JSON.stringify(module));
+    function updateModule(index, module) {
+        const tags = [];
+        const points = [];
+        for (let i = 0; i < module.tags.count; i++) {
+            tags.push({
+                "tag": module.tags.get(i).tag
+            });
+        }
+        for (let i = 0; i < module.points.count; i++) {
+            const point = module.points.get(i);
+            points.push({
+                "name": point.name,
+                "rx": point.rx,
+                "ry": point.ry
+            });
+        }
+        const result = {
+            "uuid": module.uuid,
+            "rx": module.rx,
+            "ry": module.ry,
+            "rwidth": module.rwidth,
+            "rheight": module.rheight,
+            "ioNum": module.ioNum,
+            "lockNum": module.lockNum,
+            "airNum": module.airNum,
+            "scale": module.scale,
+            "name": module.name,
+            "code": module.code,
+            "strValue": module.strValue,
+            "points": points,
+            "tags": tags,
+            "base64": module.base64
+        };
+        moduleListSettings.setValue(module.uuid, JSON.stringify(result));
+        moduleModel.set(index, module);
     }
 
     function generateUUID() {
@@ -70,6 +97,7 @@ Rectangle {
 
     Component.onCompleted: {
         loadModuleSettings();
+        console.log("librariesModel onCompleted", moduleModel.count);
     }
     color: "#ffffff"
     border.color: "#cccccc"

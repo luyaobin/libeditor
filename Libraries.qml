@@ -98,6 +98,7 @@ Item {
     ListView {
         id: libraryListView
 
+        currentIndex: 0
         anchors.fill: parent
         model: librariesModel.moduleModel
         clip: true

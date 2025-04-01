@@ -6,6 +6,24 @@ import QtQuick.Layouts 1.15
 Item {
     id: moduleInfoView
 
+    property bool banSave: false
+
+    Connections {
+        function onSelectFinishedChanged(module) {
+            banSave = true;
+            codeTextField.text = module.code;
+            nameTextField.text = module.name;
+            ioNumSpinBox.value = module.ioNum;
+            strValueTextField.text = module.strValue;
+            banSave = false;
+        }
+
+        //enabled: bool
+        //ignoreUnknownSignals: bool
+        //target: Object
+        target: moduleData
+    }
+
     Rectangle {
         anchors.fill: parent
         color: "#ffffff"
@@ -70,10 +88,18 @@ Item {
                 }
 
                 TextField {
+                    id: codeTextField
+
                     Layout.fillWidth: true
-                    text: moduleData.code
+                    text: ""
                     placeholderText: "请输入模块代码"
-                    onTextChanged: moduleData.code = text
+                    onTextChanged: {
+                        if (banSave)
+                            return ;
+
+                        moduleData.code = text;
+                        moduleData.dataChanged();
+                    }
                 }
 
                 // 模块名称
@@ -84,10 +110,18 @@ Item {
                 }
 
                 TextField {
+                    id: nameTextField
+
                     Layout.fillWidth: true
-                    text: moduleData.name
+                    text: ""
                     placeholderText: "请输入模块名称"
-                    onTextChanged: moduleData.name = text
+                    onTextChanged: {
+                        if (banSave)
+                            return ;
+
+                        moduleData.name = text;
+                        moduleData.dataChanged();
+                    }
                 }
                 // 模块名称
 
@@ -105,13 +139,6 @@ Item {
                     border.width: 1
                     radius: 4
 
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            console.log("点击了");
-                        }
-                    }
-
                     ListView {
                         anchors.fill: parent
                         model: moduleData.tags
@@ -128,12 +155,39 @@ Item {
 
                             Text {
                                 anchors.centerIn: parent
-                                text: modelData
+                                text: tag
                                 font.pixelSize: 12
                             }
 
                         }
 
+                    }
+
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            console.log("点击了");
+                            const tags = [];
+                            for (let i = 0; i < moduleData.tags.count; i++) {
+                                tags.push(moduleData.tags.get(i).tag);
+                            }
+                            editorTagModify.setCallback(tags.join("\n"), function(data) {
+                                const tagsResult = data.split("\n");
+                                const models = [];
+                                console.log("tags", tagsResult);
+                                for (let i = 0; i < tagsResult.length; i++) {
+                                    console.log("tags[i]", tagsResult[i]);
+                                    models.push({
+                                        "tag": tagsResult[i]
+                                    });
+                                }
+                                moduleData.tags.clear();
+                                moduleData.tags.append(models);
+                                console.log("moduleData.tags", moduleData.tags.count);
+                                moduleData.dataChanged();
+                            });
+                            editorTagModify.open();
+                        }
                     }
 
                 }
@@ -145,12 +199,20 @@ Item {
                 }
 
                 SpinBox {
+                    id: ioNumSpinBox
+
                     Layout.fillWidth: true
                     value: moduleData.ioNum
                     from: 0
                     to: 99
                     editable: true
-                    onValueChanged: moduleData.ioNum = value
+                    onValueChanged: {
+                        if (banSave)
+                            return ;
+
+                        moduleData.ioNum = value;
+                        moduleData.dataChanged();
+                    }
 
                     background: Rectangle {
                         // 移除了导致绑定循环的 implicitWidth: parent.width
@@ -206,6 +268,7 @@ Item {
                                 anchors.fill: parent
                                 onClicked: {
                                     moduleData.lockNum = index;
+                                    moduleData.dataChanged();
                                 }
                             }
 
@@ -222,10 +285,18 @@ Item {
                 }
 
                 TextField {
+                    id: strValueTextField
+
                     Layout.fillWidth: true
                     text: moduleData.strValue
                     placeholderText: "请输入字符串值"
-                    onTextChanged: moduleData.strValue = text
+                    onTextChanged: {
+                        if (banSave)
+                            return ;
+
+                        moduleData.strValue = text;
+                        moduleData.dataChanged();
+                    }
                 }
                 // 探针数据显示区域
 
@@ -247,7 +318,7 @@ Item {
                         clip: true
                         onCountChanged: {
                             console.log("探针数据列表数量:", count);
-                            if (count === 1)
+                            if (count === 1 && autoFillCheckBox.checked)
                                 moduleData.strValue = serial.probeListModel.get(0).chunk;
 
                         }
@@ -267,6 +338,18 @@ Item {
 
                         }
 
+                    }
+
+                    CheckBox {
+                        id: autoFillCheckBox
+
+                        anchors.right: parent.right
+                        text: "探点自动填入"
+                        onCheckedChanged: {
+                            if (checked && serial.probeListModel.count === 1)
+                                moduleData.strValue = serial.probeListModel.get(0).chunk;
+
+                        }
                     }
 
                 }
@@ -328,52 +411,32 @@ Item {
                         border.width: 1
                         radius: 4
 
-                        ListView {
-                            // 这里可以添加初始数据
-
-                            id: pointsListView
+                        PointsArea {
+                            id: pointsArea
 
                             anchors.fill: parent
-                            anchors.margins: 10
-                            clip: true
-                            model: moduleData.points
-
-                            delegate: Rectangle {
-                                width: parent.width
-                                height: 40
-                                color: index % 2 === 0 ? "#f8f8f8" : "#ffffff"
-
-                                RowLayout {
-                                    anchors.fill: parent
-                                    anchors.margins: 5
-                                    spacing: 10
-
-                                    Text {
-                                        text: "点位" + (index + 1)
-                                        font.pixelSize: 14
-                                        Layout.fillWidth: true
-                                    }
-
-                                    Text {
-                                        text: "X: " + (model.rx || 0) + ", Y: " + (model.ry || 0)
-                                        font.pixelSize: 12
-                                        color: "#666666"
-                                    }
+                            anchors.margins: 5
+                            points: moduleData.points
+                            isEditing: true
+                            // 处理点位选择
+                            onPointSelected: function(index) {
+                                // 可以在这里实现选中点位的处理逻辑
+                                console.log("选中点位:", index);
+                                // 同步选中状态到ModuleArea
+                                moduleArea.currentPointIndex = index;
+                            }
+                            // 处理点位删除
+                            onPointDeleted: function(index) {
+                                // 使用moduleData的deletePoint函数删除点位
+                                if (typeof moduleData.deletePoint === "function") {
+                                    moduleData.deletePoint(index);
+                                } else {
+                                    // 兼容旧代码，直接操作数组
+                                    if (Array.isArray(moduleData.points))
+                                        moduleData.points.splice(index, 1);
 
                                 }
-
-                                MouseArea {
-                                    anchors.fill: parent
-                                    onClicked: {
-                                        pointsListView.currentIndex = index;
-                                    }
-                                }
-
                             }
-
-                            ScrollBar.vertical: ScrollBar {
-                            }
-
                         }
 
                     }

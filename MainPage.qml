@@ -7,7 +7,21 @@ import QtQuick.Window 2.15
 import qmlcpplib.qmlsystem 1.0
 
 Page {
+    // 直接使用原始模型
+
     id: mainPage
+
+    Component.onCompleted: {
+        console.log("MainPage onCompleted");
+        const size = librariesModel.moduleModel.count;
+        if (size === 0)
+            librariesModel.addModule();
+
+        console.log("MainPage onCompleted", librariesModel.moduleModel.count);
+        const module = librariesModel.moduleModel.get(0);
+        console.log("MainPage onCompleted tags", module.tags);
+        moduleData.selectModule(module, 0);
+    }
 
     RowLayout {
         anchors.fill: parent
@@ -46,6 +60,12 @@ Page {
 
     EditorLabelModify {
         id: editorLabelModify
+
+        anchors.centerIn: parent
+    }
+
+    EditorTagModify {
+        id: editorTagModify
 
         anchors.centerIn: parent
     }
