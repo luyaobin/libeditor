@@ -1,0 +1,18 @@
+<RCC>
+    <qresource prefix="/">
+        <file>App.qml</file>
+        <file>MainPage.qml</file>
+        <file>dummydata/serial.qml</file>
+        <file>dummydata/callcom/serial.mjs</file>
+        <file>EditorLabelModify.qml</file>
+        <file>EditorTagModify.qml</file>
+        <file>Libraries.qml</file>
+        <file>ModuleArea.qml</file>
+        <file>ModuleInfo.qml</file>
+        <file>ModuleLayout.qml</file>
+        <file>ModuleList.qml</file>
+        <file>PointsArea.qml</file>
+        <file>dummydata/librariesModel.qml</file>
+        <file>dummydata/moduleData.qml</file>
+    </qresource>
+</RCC>

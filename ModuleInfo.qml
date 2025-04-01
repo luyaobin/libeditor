@@ -38,7 +38,7 @@ Item {
 
             anchors.fill: parent
             anchors.margins: 15
-            spacing: 20
+            spacing: 5
 
             RowLayout {
                 Layout.fillWidth: true
@@ -177,8 +177,8 @@ Item {
 
                 Layout.fillWidth: true
                 columns: 2
-                columnSpacing: 15
-                rowSpacing: 15
+                columnSpacing: 5
+                rowSpacing: 5
 
                 // 模块代码
                 Text {
