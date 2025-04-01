@@ -1,0 +1,2 @@
+@REM chcp 65001
+nodemon.cmd --exec "C:\\Qt\\5.15.2\\msvc2015_64\\bin\\qmlscene.exe  .\\App.qml --gles  -P C:\\Qt\\5.15.2\\msvc2015_64\\plugins -I C:\\Users\\ypb\\Desktop\\project\\aiproject\\framework\\bin\\lib -I C:\\Users\\ypb\\Desktop\\project\\qmldemo\\framework\\cusquick -I C:\\Users\\ypb\\Desktop\\project\\qmldemo\\framework\\qml" --ignore .\mediator --ext "js,mjs,qml"
