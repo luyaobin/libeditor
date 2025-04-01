@@ -5,6 +5,7 @@ QtObject {
     // points = module.points;
     // tags = module.tags;
     // 检查points是否为数组
+    // 检查points是否为数组且索引有效
 
     property string uuid: ""
     property int index: 0
@@ -79,18 +80,15 @@ QtObject {
         return false;
     }
 
-    function deletePoint(index) {
-        // 检查points是否为数组且索引有效
-        if (!Array.isArray(points) || index < 0 || index >= points.length) {
-            console.log("删除点位失败：无效的点位索引", index);
-            return false;
-        }
+    function deletePoint() {
         // 删除点位
-        points.splice(index, 1);
-        console.log("删除点位:", index);
-        // 同步到设置
-        saveToSettings();
-        return true;
+        console.log("删除点位:", index, points.count);
+        if (points.count > 0) {
+            points.remove(points.count - 1);
+            console.log("删除点位:", index);
+            // 同步到设置
+            saveToSettings();
+        }
     }
 
     function saveToSettings() {

@@ -264,7 +264,7 @@ Item {
         delegate: Rectangle {
             id: delegateItem
 
-            width: parent.width
+            width: libraryListView.width
             height: 60
             color: libraryListView.currentIndex === index ? "#f0f7ff" : (index % 2 === 0 ? "#ffffff" : "#f9f9f9")
             radius: 5

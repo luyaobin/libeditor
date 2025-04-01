@@ -4,10 +4,37 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 Rectangle {
+    // 使用XMLHttpRequest清空数据
+
     id: librariesRoot
 
     property alias moduleModel: moduleModel
     property var moduleUuids: []
+
+    function clear() {
+        const now = new Date();
+        const year = now.getFullYear();
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const day = String(now.getDate()).padStart(2, '0');
+        const hours = String(now.getHours()).padStart(2, '0');
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const dateString = `${year}${month}${day}${hours}${minutes}${seconds}`;
+        moduleListSettings.fileName = `./backup/moduleListBak_${dateString}.ini`;
+        moduleListSettings.sync();
+        console.log("已备份数据");
+        moduleListSettings.fileName = "./moduleList.ini";
+        moduleUuids.forEach(function(uuid) {
+            moduleListSettings.setValue(uuid, "");
+        });
+        moduleListSettings.uuidList = "";
+        moduleUuids = [];
+        moduleModel.clear();
+        console.log("clear", moduleModel.count);
+    }
+
+    function rebuild() {
+    }
 
     function loadModuleSettings() {
         // 从Settings加载模块UUID列表
@@ -26,7 +53,7 @@ Rectangle {
         moduleUuids = uuidList;
     }
 
-    function addModule(module) {
+    function addModule() {
         const uuid = generateUUID();
         moduleUuids.push(uuid);
         const newModule = {
@@ -49,6 +76,41 @@ Rectangle {
         moduleListSettings.setValue(uuid, JSON.stringify(newModule));
         moduleListSettings.uuidList = moduleUuids.join(',');
         moduleModel.append(newModule);
+    }
+
+    function fixModule(index, code, name, ioNum, lockNum, airNum) {
+        const moduleRef = moduleModel.get(index);
+        if (index !== -1) {
+            moduleRef.setProperty(index, "code", code);
+            moduleRef.setProperty(index, "name", name);
+            moduleRef.setProperty(index, "ioNum", ioNum);
+            moduleRef.setProperty(index, "lockNum", lockNum);
+            moduleRef.setProperty(index, "airNum", airNum);
+            // 自动创建点位
+            const pointsArray = [];
+            for (let i = 0; i < ioNum; i++) {
+                pointsArray.push({
+                    "name": "IO点位" + (i + 1),
+                    "rx": 0,
+                    "ry": 0
+                });
+            }
+            for (let i = 0; i < lockNum; i++) {
+                pointsArray.push({
+                    "name": "锁点位" + (i + 1),
+                    "rx": 0,
+                    "ry": 0
+                });
+            }
+            for (let i = 0; i < airNum; i++) {
+                pointsArray.push({
+                    "name": "气点位" + (i + 1),
+                    "rx": 0,
+                    "ry": 0
+                });
+            }
+            moduleRef.points.append(pointsArray);
+        }
     }
 
     function updateModule(index, module) {

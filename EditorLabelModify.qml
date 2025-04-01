@@ -6,8 +6,6 @@ import QtQuick.Layouts 1.14
 Popup {
     id: selectLabelPopup
 
-    property var librariesModel: null
-
     anchors.centerIn: parent
     width: parent.width * 0.7
     height: parent.height * 0.8
@@ -68,7 +66,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left
                             anchors.leftMargin: 10
-                            text: "模块列表（每行一个模块，格式：模块代码,模块名称）"
+                            text: "模块列表（每行一个模块，格式：模块代码,模块名称,引脚数量,气密存在,锁片数量）"
                             font.pixelSize: 14
                             font.bold: true
                             color: "#606266"
@@ -89,7 +87,7 @@ Popup {
                             selectByMouse: true
                             font.pixelSize: 14
                             color: "#303133"
-                            placeholderText: "请输入模块信息，格式：\nA001,温度传感器\nB002,压力传感器\n..."
+                            placeholderText: "请输入模块信息，格式：\nA001,温度传感器,1,0,0\nB002,压力传感器,2,1,1\n..."
 
                             background: Rectangle {
                                 color: "transparent"
@@ -145,6 +143,8 @@ Popup {
                     implicitHeight: 36
                     onClicked: {
                         // 解析文本并导入模块
+                        console.log("导入模块", librariesModel);
+                        librariesModel.clear();
                         var lines = namesTextArea.text.split('\n');
                         for (var i = 0; i < lines.length; i++) {
                             var line = lines[i].trim();
@@ -153,12 +153,26 @@ Popup {
                                 if (parts.length >= 2) {
                                     var moduleCode = parts[0].trim();
                                     var moduleName = parts[1].trim();
-                                    // 创建新模块
+                                    var ioNum = 0;
+                                    var airNum = 0;
+                                    var lockNum = 0;
+                                    if (parts.length >= 3)
+                                        ioNum = parts[2].trim();
+
+                                    if (parts.length >= 4)
+                                        airNum = parts[3].trim();
+
+                                    if (parts.length >= 5)
+                                        lockNum = parts[4].trim();
+
                                     if (librariesModel) {
                                         var newModule = librariesModel.addModule();
                                         if (newModule) {
                                             newModule.code = moduleCode;
                                             newModule.name = moduleName;
+                                            newModule.ioNum = ioNum;
+                                            newModule.airNum = airNum;
+                                            newModule.lockNum = lockNum;
                                             librariesModel.updateModule(newModule.uuid, newModule);
                                         }
                                     }

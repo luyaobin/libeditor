@@ -14,6 +14,7 @@ Item {
             codeTextField.text = module.code;
             nameTextField.text = module.name;
             ioNumSpinBox.value = module.ioNum;
+            airCheckBox.checked = module.airNum === 1;
             strValueTextField.text = module.strValue;
             banSave = false;
         }
@@ -247,7 +248,7 @@ Item {
                     spacing: 5
 
                     Repeater {
-                        model: 10
+                        model: 7
 
                         delegate: Rectangle {
                             width: 30
@@ -272,6 +273,33 @@ Item {
                                 }
                             }
 
+                        }
+
+                    }
+
+                    Row {
+                        spacing: 5
+
+                        Text {
+                            text: "气密存在:"
+                            font.pixelSize: 14
+                            color: "#555555"
+                            font.family: "Microsoft YaHei"
+                            leftPadding: 5
+                            verticalAlignment: Text.AlignVCenter
+                        }
+
+                        CheckBox {
+                            id: airCheckBox
+
+                            checked: false
+                            onCheckedChanged: {
+                                if (banSave)
+                                    return ;
+
+                                moduleData.airNum = checked ? 1 : 0;
+                                moduleData.dataChanged();
+                            }
                         }
 
                     }
@@ -370,6 +398,13 @@ Item {
 
                         Text {
                             text: "理论点位:"
+                        }
+
+                        Button {
+                            text: "删除尾点"
+                            onClicked: {
+                                moduleData.deletePoint();
+                            }
                         }
 
                     }
