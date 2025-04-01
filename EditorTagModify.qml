@@ -152,7 +152,9 @@ Popup {
                     implicitWidth: 100
                     implicitHeight: 36
                     onClicked: {
-                        selectLabelPopup.callback(namesTextArea.text);
+                        selectLabelPopup.callback(namesTextArea.text.split("\n").filter((item) => {
+                            return item.trim() !== "";
+                        }).join("\n"));
                         selectLabelPopup.close();
                     }
 

@@ -39,6 +39,13 @@ Rectangle {
                 spacing: 10
 
                 Text {
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: 100
+                    text: "脚位:" + (moduleData.tags.count > index ? moduleData.tags.get(index).tag : (index + 1) + "(默认)")
+                }
+
+                Text {
+                    Layout.preferredWidth: 100
                     text: (model.name) ? model.name : "点位" + (index + 1)
                     font.pixelSize: 14
                     color: "#333333"
@@ -46,6 +53,7 @@ Rectangle {
                 }
 
                 Text {
+                    Layout.preferredWidth: 100
                     text: "X: " + (model.rx || 0) + ", Y: " + (model.ry || 0)
                     font.pixelSize: 12
                     color: "#666666"
