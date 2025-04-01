@@ -85,7 +85,19 @@ Rectangle {
             "base64": module.base64
         };
         moduleListSettings.setValue(module.uuid, JSON.stringify(result));
-        moduleModel.set(index, module);
+        moduleModel.setProperty(index, "uuid", module.uuid);
+        moduleModel.setProperty(index, "rx", module.rx);
+        moduleModel.setProperty(index, "ry", module.ry);
+        moduleModel.setProperty(index, "rwidth", module.rwidth);
+        moduleModel.setProperty(index, "rheight", module.rheight);
+        moduleModel.setProperty(index, "ioNum", module.ioNum);
+        moduleModel.setProperty(index, "lockNum", module.lockNum);
+        moduleModel.setProperty(index, "airNum", module.airNum);
+        moduleModel.setProperty(index, "scale", module.scale);
+        moduleModel.setProperty(index, "name", module.name);
+        moduleModel.setProperty(index, "code", module.code);
+        moduleModel.setProperty(index, "strValue", module.strValue);
+        moduleModel.setProperty(index, "base64", module.base64);
     }
 
     function generateUUID() {

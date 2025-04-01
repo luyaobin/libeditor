@@ -81,7 +81,7 @@ Rectangle {
             MouseArea {
                 anchors.fill: parent
                 drag.target: parent
-                drag.axis: Drag.XAndY
+                // drag.axis: Drag.XAndY
                 enabled: moduleArea.isEditing
                 onPressed: {
                     moduleArea.isDraggingPoint = true;
@@ -186,6 +186,7 @@ Rectangle {
         }
         onReleased: {
             if (isDragging && moduleArea.isEditing && !moduleArea.isDraggingPoint) {
+                return ;
                 isDragging = false;
                 // 计算拖拽距离
                 var dragDistance = Math.sqrt(Math.pow(mouseX - startX, 2) + Math.pow(mouseY - startY, 2));
