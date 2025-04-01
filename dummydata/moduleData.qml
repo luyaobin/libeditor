@@ -4,6 +4,7 @@ QtObject {
     // 发出信号通知数据已更新
     // points = module.points;
     // tags = module.tags;
+    // 检查points是否为数组
 
     property string uuid: ""
     property int index: 0
@@ -44,23 +45,18 @@ QtObject {
         points = module.points;
         tags = module.tags;
         base64 = module.base64 || "";
-        console.log(module);
+        // console.log(module);
         selectFinishedChanged(module);
     }
 
     function addPoint(x, y, name) {
-        // 检查points是否为数组
-        if (!Array.isArray(points))
-            points = [];
-
         // 添加新点位
         var newPoint = {
             "name": name || "点位" + (points.length + 1),
             "rx": x,
             "ry": y
         };
-        points.push(newPoint);
-        pointsModel.append(newPoint);
+        points.append(newPoint);
         console.log("添加点位:", newPoint);
         // 同步到设置
         saveToSettings();
@@ -118,6 +114,7 @@ QtObject {
             "tags": tags,
             "base64": base64
         };
+        console.log("moduleRef", tags, points);
         librariesModel.updateModule(index, moduleRef);
     }
 
