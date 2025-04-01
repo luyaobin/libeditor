@@ -34,11 +34,109 @@ Item {
         border.width: 1
 
         ColumnLayout {
+            // 标题部分
+
             anchors.fill: parent
             anchors.margins: 15
             spacing: 20
 
-            // 标题部分
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 15
+
+                Text {
+                    text: "模块库"
+                    font.pixelSize: 18
+                    font.bold: true
+                    color: "#333333"
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                TextField {
+                    id: serialPortField
+
+                    Layout.preferredWidth: 120
+                    Layout.preferredHeight: 40
+                    placeholderText: "串口号"
+                    text: serial.settings.portName
+                    onEditingFinished: {
+                        // 保存串口号到配置文件
+                        serial.settings.portName = text;
+                    }
+
+                    background: Rectangle {
+                        border.color: "#dcdfe6"
+                        border.width: 1
+                        radius: 4
+                    }
+
+                }
+
+                Button {
+                    // 显示提示信息
+
+                    text: "列表导入"
+                    Layout.preferredWidth: 120
+                    Layout.preferredHeight: 40
+                    onClicked: {
+                        editorLabelModify.open();
+                    }
+
+                    background: Rectangle {
+                        color: parent.pressed ? "#3a7ab3" : "#4a90e2"
+                        radius: 5
+                    }
+
+                    contentItem: Text {
+                        text: parent.text
+                        font.pixelSize: 14
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                }
+
+                Button {
+                    // 显示提示信息
+
+                    text: "添加模块"
+                    Layout.preferredWidth: 120
+                    Layout.preferredHeight: 40
+                    ToolTip.text: "添加模块 (最后一个模块无名称时不允许添加)"
+                    ToolTip.visible: hovered
+                    ToolTip.delay: 500
+                    onClicked: {
+                        // 检查最后一个模块的名称是否为空
+                        const size = librariesModel.moduleModel.count;
+                        var lastModule = librariesModel.moduleModel.get(size - 1);
+                        if (lastModule && lastModule.name === "")
+                            return ;
+
+                        // 使用来自librariesModel的方法添加新模块
+                        librariesModel.addModule();
+                    }
+
+                    background: Rectangle {
+                        color: parent.pressed ? "#3a7ab3" : "#4a90e2"
+                        radius: 5
+                    }
+
+                    contentItem: Text {
+                        text: parent.text
+                        font.pixelSize: 14
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+
+                }
+
+            }
+
             Rectangle {
                 Layout.fillWidth: true
                 height: 50

@@ -231,6 +231,30 @@ Rectangle {
         moduleModel.setProperty(index, "base64", module.base64);
     }
 
+    function moveModule(fromIndex, toIndex) {
+        if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= moduleModel.count || toIndex >= moduleModel.count)
+            return false;
+
+        // 保存源和目标模块
+        var sourceModule = moduleModel.get(fromIndex);
+        var targetModule = moduleModel.get(toIndex);
+        if (sourceModule && targetModule) {
+            // 交换模块位置
+            var tempX = targetModule.rx;
+            var tempY = targetModule.ry;
+            // 更新位置
+            moduleModel.setProperty(toIndex, "rx", sourceModule.rx);
+            moduleModel.setProperty(toIndex, "ry", sourceModule.ry);
+            moduleModel.setProperty(fromIndex, "rx", tempX);
+            moduleModel.setProperty(fromIndex, "ry", tempY);
+            // 保存到设置
+            updateModule(fromIndex, moduleModel.get(fromIndex));
+            updateModule(toIndex, moduleModel.get(toIndex));
+            return true;
+        }
+        return false;
+    }
+
     function generateUUID() {
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
             var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 3 | 8);

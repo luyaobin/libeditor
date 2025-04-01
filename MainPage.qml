@@ -33,17 +33,6 @@ Page {
             Layout.fillHeight: true
             Layout.preferredWidth: 1
 
-            Libraries {
-                anchors.fill: parent
-            }
-
-        }
-
-        Item {
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-            Layout.preferredWidth: 1
-
             ModuleInfo {
                 anchors.fill: parent
             }
@@ -53,7 +42,26 @@ Page {
         Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
-            Layout.preferredWidth: 2
+            Layout.preferredWidth: 3
+
+            ColumnLayout {
+                anchors.fill: parent
+                spacing: 10
+
+                ModuleList {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.preferredHeight: 1
+                }
+
+                ModuleLayout {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    Layout.preferredHeight: 4
+                }
+
+            }
+
         }
 
     }
