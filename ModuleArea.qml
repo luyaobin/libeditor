@@ -23,6 +23,8 @@ Rectangle {
     onPasteBackground: {
         qmlSystem.ctrlV();
         backgroundImage.source = qmlSystem.image;
+        moduleData.base64 = qmlSystem.image;
+        moduleData.dataChanged();
         moduleArea.hasBackground = true;
     }
     color: "#F5F5F5"
@@ -31,6 +33,8 @@ Rectangle {
         if ((event.key === Qt.Key_V) && (event.modifiers & Qt.ControlModifier)) {
             qmlSystem.ctrlV();
             backgroundImage.source = qmlSystem.image;
+            moduleData.base64 = qmlSystem.image;
+            moduleData.dataChanged();
             moduleArea.hasBackground = true;
         }
     }
@@ -162,7 +166,7 @@ Rectangle {
         onDoubleClicked: {
             if (moduleArea.isEditing && !moduleArea.isDraggingPoint) {
                 // 双击添加新点位
-                var pointName = "点位" + (moduleData.points.length + 1);
+                var pointName = "点位" + (moduleData.points.count + 1);
                 const rWidth = moduleArea.width;
                 const rHeight = moduleArea.height;
                 // 使用模型操作方法添加点位

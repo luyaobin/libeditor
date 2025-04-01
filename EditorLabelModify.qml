@@ -67,7 +67,7 @@ Popup {
                             anchors.verticalCenter: parent.verticalCenter
                             anchors.left: parent.left
                             anchors.leftMargin: 10
-                            text: "模块列表（每行一个模块，格式：模块代码,模块名称,引脚数量,锁片数量,气密存在）"
+                            text: "模块列表（每行一个模块，格式：模块型号,模块代码,模块名称,引脚数量,锁片数量,存在气密）"
                             font.pixelSize: 14
                             font.bold: true
                             color: "#606266"
@@ -88,7 +88,7 @@ Popup {
                             selectByMouse: true
                             font.pixelSize: 14
                             color: "#303133"
-                            placeholderText: "请输入模块信息，格式：\nA001,温度传感器,1,0,0\nB002,压力传感器,2,1,1\n..."
+                            placeholderText: "请输入模块信息，格式：\nAAA,A001,温度传感器,1,0,0\nBBB,B002,压力传感器,2,1,1\n..."
 
                             background: Rectangle {
                                 color: "transparent"
@@ -118,7 +118,7 @@ Popup {
                     implicitHeight: 36
                     text: "测试数据"
                     onClicked: {
-                        namesTextArea.text = "A001,温度传感器,1,0,0\nB002,压力传感器,2,1,1";
+                        namesTextArea.text = "AAA,A001,温度传感器,1,0,0\nBBB,B002,压力传感器,2,1,1";
                     }
 
                     background: Rectangle {
@@ -171,30 +171,43 @@ Popup {
                         // 解析文本并导入模块
                         console.log("导入模块", librariesModel);
                         librariesModel.clear();
+                        const codeSet = new Set();
+                        const nameSet = new Set();
                         var lines = namesTextArea.text.split('\n');
                         for (var i = 0; i < lines.length; i++) {
                             var line = lines[i].trim();
                             console.log("line", line);
                             if (line) {
                                 var parts = line.split(',');
-                                if (parts.length >= 2) {
-                                    var moduleCode = parts[0].trim();
-                                    var moduleName = parts[1].trim();
+                                if (parts.length >= 3) {
+                                    var moduleMeta = parts[0].trim();
+                                    var moduleCode = parts[1].trim();
+                                    var moduleName = parts[2].trim();
+                                    if (codeSet.has(moduleCode)) {
+                                        console.log("模块代码重复", moduleCode);
+                                        continue;
+                                    }
+                                    if (nameSet.has(moduleName)) {
+                                        console.log("模块名称重复", moduleName);
+                                        continue;
+                                    }
+                                    codeSet.add(moduleCode);
+                                    nameSet.add(moduleName);
                                     var ioNum = 0;
                                     var airNum = 0;
                                     var lockNum = 0;
-                                    if (parts.length >= 3)
-                                        ioNum = parseInt(parts[2].trim());
-
                                     if (parts.length >= 4)
-                                        lockNum = parseInt(parts[3].trim());
+                                        ioNum = parseInt(parts[3].trim());
 
                                     if (parts.length >= 5)
-                                        airNum = parseInt(parts[4].trim());
+                                        lockNum = parseInt(parts[4].trim());
+
+                                    if (parts.length >= 6)
+                                        airNum = parseInt(parts[5].trim());
 
                                     if (librariesModel) {
                                         var newModule = librariesModel.addModule();
-                                        librariesModel.fixModule(i, moduleCode, moduleName, ioNum, lockNum, airNum);
+                                        librariesModel.fixModule(i, moduleCode, moduleName, moduleMeta, ioNum, lockNum, airNum);
                                     }
                                 }
                             }

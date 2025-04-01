@@ -6,22 +6,23 @@ import QtQuick.Layouts 1.15
 Item {
     id: moduleInfoView
 
-    property bool banSave: false
+    property bool banSave: true
 
     Connections {
         function onSelectFinishedChanged(module) {
             banSave = true;
             codeTextField.text = module.code;
             nameTextField.text = module.name;
+            metaTextField.text = module.meta;
+            siteTextField.text = module.site;
+            strLightTextField.text = module.strLight;
             ioNumSpinBox.value = module.ioNum;
             airCheckBox.checked = module.airNum === 1;
             strValueTextField.text = module.strValue;
+            moduleArea.backgroundSource = module.base64;
             banSave = false;
         }
 
-        //enabled: bool
-        //ignoreUnknownSignals: bool
-        //target: Object
         target: moduleData
     }
 
@@ -93,6 +94,7 @@ Item {
 
                     Layout.fillWidth: true
                     text: ""
+                    enabled: false
                     placeholderText: "请输入模块代码"
                     onTextChanged: {
                         if (banSave)
@@ -115,6 +117,7 @@ Item {
 
                     Layout.fillWidth: true
                     text: ""
+                    enabled: false
                     placeholderText: "请输入模块名称"
                     onTextChanged: {
                         if (banSave)
@@ -126,6 +129,73 @@ Item {
                 }
                 // 模块名称
 
+                // 模块代码
+                Text {
+                    text: "模块型号:"
+                    font.pixelSize: 14
+                    color: "#555555"
+                }
+
+                TextField {
+                    id: metaTextField
+
+                    Layout.fillWidth: true
+                    text: ""
+                    enabled: false
+                    placeholderText: "请输入模块型号"
+                    onTextChanged: {
+                        if (banSave)
+                            return ;
+
+                        moduleData.meta = text;
+                        moduleData.dataChanged();
+                    }
+                }
+                // 模块代码
+
+                Text {
+                    text: "模块位置:"
+                    font.pixelSize: 14
+                    color: "#555555"
+                }
+
+                TextField {
+                    id: siteTextField
+
+                    Layout.fillWidth: true
+                    text: ""
+                    placeholderText: "请输入模块位置(可不填)"
+                    onTextChanged: {
+                        if (banSave)
+                            return ;
+
+                        moduleData.site = text;
+                        moduleData.dataChanged();
+                    }
+                }
+                // 模块代码
+
+                Text {
+                    text: "模块灯号:"
+                    font.pixelSize: 14
+                    color: "#555555"
+                }
+
+                TextField {
+                    id: strLightTextField
+
+                    Layout.fillWidth: true
+                    text: ""
+                    placeholderText: "请输入模块灯号(可忽略)"
+                    onTextChanged: {
+                        if (banSave)
+                            return ;
+
+                        moduleData.strLight = text;
+                        moduleData.dataChanged();
+                    }
+                }
+
                 Text {
                     text: "起点点位:"
                     font.pixelSize: 14
@@ -136,8 +206,8 @@ Item {
                     id: strValueTextField
 
                     Layout.fillWidth: true
-                    text: moduleData.strValue
-                    placeholderText: "请输入字符串值"
+                    text: ""
+                    placeholderText: "请输入起点点位(必填)"
                     onTextChanged: {
                         if (banSave)
                             return ;
@@ -167,7 +237,7 @@ Item {
                         onCountChanged: {
                             console.log("探针数据列表数量:", count);
                             if (count === 1 && autoFillCheckBox.checked)
-                                moduleData.strValue = serial.probeListModel.get(0).chunk;
+                                strValueTextField.text = serial.probeListModel.get(0).chunk;
 
                         }
 
@@ -188,14 +258,59 @@ Item {
 
                     }
 
+                    Button {
+                        id: fillProbeButton
+
+                        anchors.right: autoFillCheckBox.left
+                        anchors.rightMargin: 10
+                        text: "填入"
+                        implicitHeight: 30
+                        implicitWidth: 60
+                        onClicked: {
+                            if (serial.probeListModel.count > 0)
+                                strValueTextField.text = serial.probeListModel.get(0).chunk;
+
+                        }
+
+                        background: Rectangle {
+                            color: parent.hovered ? "#409EFF" : "#66b1ff"
+                            radius: 4
+
+                            // 添加按钮悬停效果
+                            Behavior on color {
+                                ColorAnimation {
+                                    duration: 150
+                                }
+
+                            }
+
+                        }
+
+                        contentItem: Text {
+                            text: parent.text
+                            color: "white"
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+
+                            font {
+                                pixelSize: 14
+                                family: "Microsoft YaHei"
+                                bold: true
+                            }
+
+                        }
+
+                    }
+
                     CheckBox {
                         id: autoFillCheckBox
 
                         anchors.right: parent.right
                         text: "探点自动填入"
                         onCheckedChanged: {
+                            console.log("autoFillCheckBox", checked, serial.probeListModel.count);
                             if (checked && serial.probeListModel.count === 1)
-                                moduleData.strValue = serial.probeListModel.get(0).chunk;
+                                strValueTextField.text = serial.probeListModel.get(0).chunk;
 
                         }
                     }

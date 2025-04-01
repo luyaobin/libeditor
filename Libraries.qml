@@ -133,6 +133,26 @@ Item {
                         Layout.fillWidth: true
                     }
 
+                    TextField {
+                        id: serialPortField
+
+                        Layout.preferredWidth: 120
+                        Layout.preferredHeight: 40
+                        placeholderText: "串口号"
+                        text: serial.settings.portName
+                        onEditingFinished: {
+                            // 保存串口号到配置文件
+                            serial.settings.portName = text;
+                        }
+
+                        background: Rectangle {
+                            border.color: "#dcdfe6"
+                            border.width: 1
+                            radius: 4
+                        }
+
+                    }
+
                     Button {
                         // 显示提示信息
 

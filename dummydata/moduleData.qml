@@ -19,6 +19,9 @@ QtObject {
     property real scale: 0
     property string name: ""
     property string code: ""
+    property string meta: ""
+    property string site: ""
+    property string strLight: ""
     property string strValue: ""
     property var points: null
     property var checks: null
@@ -44,6 +47,9 @@ QtObject {
         scale = module.scale;
         name = module.name;
         code = module.code;
+        meta = module.meta;
+        site = module.site;
+        strLight = module.strLight;
         strValue = module.strValue;
         points = module.points;
         checks = module.checks;
@@ -155,6 +161,9 @@ QtObject {
             "scale": scale,
             "name": name,
             "code": code,
+            "meta": meta,
+            "site": site,
+            "strLight": strLight,
             "strValue": strValue,
             "points": points,
             "checks": checks,

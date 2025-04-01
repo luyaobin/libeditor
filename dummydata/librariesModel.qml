@@ -68,6 +68,9 @@ Rectangle {
             "scale": 0,
             "name": "",
             "code": "",
+            "site": "",
+            "meta": "",
+            "strLight": "",
             "strValue": "",
             "points": [],
             "checks": [],
@@ -80,11 +83,12 @@ Rectangle {
         moduleModel.append(newModule);
     }
 
-    function fixModule(index, code, name, ioNum, lockNum, airNum) {
+    function fixModule(index, code, name, meta, ioNum, lockNum, airNum) {
         const moduleRef = moduleModel.get(index);
         if (index !== -1) {
             moduleModel.setProperty(index, "code", code);
             moduleModel.setProperty(index, "name", name);
+            moduleModel.setProperty(index, "meta", meta);
             moduleModel.setProperty(index, "ioNum", ioNum);
             moduleModel.setProperty(index, "lockNum", lockNum);
             moduleModel.setProperty(index, "airNum", airNum);
@@ -126,6 +130,29 @@ Rectangle {
             moduleRef.points.append(pointsArray);
             moduleRef.checks.append(checksArray);
             moduleRef.airChecks.append(airChecksArray);
+            const newModule = {
+                "uuid": moduleRef.uuid,
+                "rx": 0,
+                "ry": 0,
+                "rwidth": 0,
+                "rheight": 0,
+                "ioNum": moduleRef.ioNum,
+                "lockNum": moduleRef.lockNum,
+                "airNum": moduleRef.airNum,
+                "scale": moduleRef.scale,
+                "name": moduleRef.name,
+                "code": moduleRef.code,
+                "site": moduleRef.site,
+                "meta": moduleRef.meta,
+                "strLight": moduleRef.strLight,
+                "strValue": moduleRef.strValue,
+                "points": pointsArray,
+                "checks": checksArray,
+                "airChecks": airChecksArray,
+                "tags": [],
+                "base64": moduleRef.base64
+            };
+            moduleListSettings.setValue(moduleRef.uuid, JSON.stringify(newModule));
         }
     }
 
@@ -175,6 +202,9 @@ Rectangle {
             "scale": module.scale,
             "name": module.name,
             "code": module.code,
+            "site": module.site,
+            "meta": module.meta,
+            "strLight": module.strLight,
             "strValue": module.strValue,
             "points": points,
             "tags": tags,
@@ -194,6 +224,9 @@ Rectangle {
         moduleModel.setProperty(index, "scale", module.scale);
         moduleModel.setProperty(index, "name", module.name);
         moduleModel.setProperty(index, "code", module.code);
+        moduleModel.setProperty(index, "site", module.site);
+        moduleModel.setProperty(index, "meta", module.meta);
+        moduleModel.setProperty(index, "strLight", module.strLight);
         moduleModel.setProperty(index, "strValue", module.strValue);
         moduleModel.setProperty(index, "base64", module.base64);
     }
