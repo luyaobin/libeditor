@@ -176,12 +176,17 @@ Popup {
                         var lines = namesTextArea.text.split('\n');
                         for (var i = 0; i < lines.length; i++) {
                             var line = lines[i].trim();
+                            // console.log("line", line);
+                            // 如果数据中没有逗号，尝试使用制表符分割
+                            if (!line.includes(','))
+                                line = line.replace(/\s+/g, ',');
+
                             console.log("line", line);
                             if (line) {
                                 var parts = line.split(',');
                                 if (parts.length >= 3) {
-                                    var moduleMeta = parts[0].trim();
-                                    var moduleCode = parts[1].trim();
+                                    var moduleCode = parts[0].trim();
+                                    var moduleMeta = parts[1].trim();
                                     var moduleName = parts[2].trim();
                                     if (codeSet.has(moduleCode)) {
                                         console.log("模块代码重复", moduleCode);
