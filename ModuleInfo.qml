@@ -1,7 +1,7 @@
 import QtGraphicalEffects 1.0
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 2.14
+import QtQuick.Controls 2.14
+import QtQuick.Layouts 1.14
 
 Item {
     id: moduleInfoView
@@ -44,13 +44,6 @@ Item {
                 Layout.fillWidth: true
                 spacing: 15
 
-                Text {
-                    text: "模块库"
-                    font.pixelSize: 18
-                    font.bold: true
-                    color: "#333333"
-                }
-
                 Item {
                     Layout.fillWidth: true
                 }
@@ -72,14 +65,13 @@ Item {
                         border.width: 1
                         radius: 4
                     }
-
                 }
 
                 Button {
                     // 显示提示信息
 
                     text: "列表导入"
-                    Layout.preferredWidth: 120
+                    Layout.preferredWidth: 100
                     Layout.preferredHeight: 40
                     onClicked: {
                         editorLabelModify.open();
@@ -97,14 +89,13 @@ Item {
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-
                 }
 
                 Button {
                     // 显示提示信息
 
-                    text: "添加模块"
-                    Layout.preferredWidth: 120
+                    text: "导入回路"
+                    Layout.preferredWidth: 100
                     Layout.preferredHeight: 40
                     ToolTip.text: "添加模块 (最后一个模块无名称时不允许添加)"
                     ToolTip.visible: hovered
@@ -114,7 +105,7 @@ Item {
                         const size = librariesModel.moduleModel.count;
                         var lastModule = librariesModel.moduleModel.get(size - 1);
                         if (lastModule && lastModule.name === "")
-                            return ;
+                            return;
 
                         // 使用来自librariesModel的方法添加新模块
                         librariesModel.addModule();
@@ -132,9 +123,41 @@ Item {
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
                     }
-
                 }
 
+                Button {
+                    // 显示提示信息
+
+                    text: "模块布局"
+                    Layout.preferredWidth: 100
+                    Layout.preferredHeight: 40
+                    ToolTip.text: "添加模块 (最后一个模块无名称时不允许添加)"
+                    ToolTip.visible: hovered
+                    ToolTip.delay: 500
+                    onClicked: {
+                        // 检查最后一个模块的名称是否为空
+                        const size = librariesModel.moduleModel.count;
+                        var lastModule = librariesModel.moduleModel.get(size - 1);
+                        if (lastModule && lastModule.name === "")
+                            return;
+
+                        // 使用来自librariesModel的方法添加新模块
+                        librariesModel.addModule();
+                    }
+
+                    background: Rectangle {
+                        color: parent.pressed ? "#3a7ab3" : "#4a90e2"
+                        radius: 5
+                    }
+
+                    contentItem: Text {
+                        text: parent.text
+                        font.pixelSize: 14
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                    }
+                }
             }
 
             Rectangle {
@@ -166,9 +189,7 @@ Item {
                         elide: Text.ElideMiddle
                         Layout.maximumWidth: 150
                     }
-
                 }
-
             }
 
             // 模块信息表单
@@ -196,7 +217,7 @@ Item {
                     placeholderText: "请输入模块代码"
                     onTextChanged: {
                         if (banSave)
-                            return ;
+                            return;
 
                         moduleData.code = text;
                         moduleData.dataChanged();
@@ -219,7 +240,7 @@ Item {
                     placeholderText: "请输入模块名称"
                     onTextChanged: {
                         if (banSave)
-                            return ;
+                            return;
 
                         moduleData.name = text;
                         moduleData.dataChanged();
@@ -243,7 +264,7 @@ Item {
                     placeholderText: "请输入模块型号"
                     onTextChanged: {
                         if (banSave)
-                            return ;
+                            return;
 
                         moduleData.meta = text;
                         moduleData.dataChanged();
@@ -265,7 +286,7 @@ Item {
                     placeholderText: "请输入模块位置(可不填)"
                     onTextChanged: {
                         if (banSave)
-                            return ;
+                            return;
 
                         moduleData.site = text;
                         moduleData.dataChanged();
@@ -287,7 +308,7 @@ Item {
                     placeholderText: "请输入模块灯号(可忽略)"
                     onTextChanged: {
                         if (banSave)
-                            return ;
+                            return;
 
                         moduleData.strLight = text;
                         moduleData.dataChanged();
@@ -308,7 +329,7 @@ Item {
                     placeholderText: "请输入起点点位(必填)"
                     onTextChanged: {
                         if (banSave)
-                            return ;
+                            return;
 
                         moduleData.strValue = text;
                         moduleData.dataChanged();
@@ -336,7 +357,6 @@ Item {
                             console.log("探针数据列表数量:", count);
                             if (count === 1 && autoFillCheckBox.checked)
                                 strValueTextField.text = serial.probeListModel.get(0).chunk;
-
                         }
 
                         delegate: Rectangle {
@@ -351,9 +371,7 @@ Item {
                                 text: model.chunk
                                 font.pixelSize: 12
                             }
-
                         }
-
                     }
 
                     Button {
@@ -367,7 +385,6 @@ Item {
                         onClicked: {
                             if (serial.probeListModel.count > 0)
                                 strValueTextField.text = serial.probeListModel.get(0).chunk;
-
                         }
 
                         background: Rectangle {
@@ -379,9 +396,7 @@ Item {
                                 ColorAnimation {
                                     duration: 150
                                 }
-
                             }
-
                         }
 
                         contentItem: Text {
@@ -395,9 +410,7 @@ Item {
                                 family: "Microsoft YaHei"
                                 bold: true
                             }
-
                         }
-
                     }
 
                     CheckBox {
@@ -409,10 +422,8 @@ Item {
                             console.log("autoFillCheckBox", checked, serial.probeListModel.count);
                             if (checked && serial.probeListModel.count === 1)
                                 strValueTextField.text = serial.probeListModel.get(0).chunk;
-
                         }
                     }
-
                 }
 
                 Text {
@@ -448,9 +459,7 @@ Item {
                                 text: tag
                                 font.pixelSize: 12
                             }
-
                         }
-
                     }
 
                     MouseArea {
@@ -461,7 +470,7 @@ Item {
                             for (let i = 0; i < moduleData.tags.count; i++) {
                                 tags.push(moduleData.tags.get(i).tag);
                             }
-                            editorTagModify.setCallback(tags.join("\n"), function(data) {
+                            editorTagModify.setCallback(tags.join("\n"), function (data) {
                                 const tagsResult = data.split("\n");
                                 const models = [];
                                 console.log("tags", tagsResult);
@@ -479,7 +488,6 @@ Item {
                             editorTagModify.open();
                         }
                     }
-
                 }
 
                 Item {
@@ -511,9 +519,7 @@ Item {
                                 moduleArea.rightTransparent();
                             }
                         }
-
                     }
-
                 }
 
                 Item {
@@ -534,9 +540,7 @@ Item {
                             anchors.fill: parent
                             points: moduleData.points
                         }
-
                     }
-
                 }
 
                 Text {
@@ -559,7 +563,7 @@ Item {
                         editable: true
                         onValueChanged: {
                             if (banSave)
-                                return ;
+                                return;
 
                             moduleData.ioNum = value;
                             moduleData.dataChanged();
@@ -582,7 +586,6 @@ Item {
                                 samples: 8
                                 color: "#20000000"
                             }
-
                         }
 
                         contentItem: TextInput {
@@ -596,9 +599,7 @@ Item {
                                 pixelSize: 14
                                 family: "Microsoft YaHei"
                             }
-
                         }
-
                     }
 
                     Text {
@@ -612,7 +613,6 @@ Item {
                             pixelSize: 14
                             family: "Microsoft YaHei"
                         }
-
                     }
 
                     Button {
@@ -633,9 +633,7 @@ Item {
                                 ColorAnimation {
                                     duration: 150
                                 }
-
                             }
-
                         }
 
                         contentItem: Text {
@@ -649,11 +647,8 @@ Item {
                                 family: "Microsoft YaHei"
                                 bold: true
                             }
-
                         }
-
                     }
-
                 }
                 // 引脚数量
 
@@ -692,9 +687,7 @@ Item {
                                     moduleData.dataChanged();
                                 }
                             }
-
                         }
-
                     }
 
                     Row {
@@ -715,15 +708,13 @@ Item {
                             checked: false
                             onCheckedChanged: {
                                 if (banSave)
-                                    return ;
+                                    return;
 
                                 moduleData.airNum = checked ? 1 : 0;
                                 moduleData.dataChanged();
                             }
                         }
-
                     }
-
                 }
 
                 Item {
@@ -746,14 +737,14 @@ Item {
                             points: moduleData.points
                             isEditing: true
                             // 处理点位选择
-                            onPointSelected: function(index) {
+                            onPointSelected: function (index) {
                                 // 可以在这里实现选中点位的处理逻辑
                                 console.log("选中点位:", index);
                                 // 同步选中状态到ModuleArea
                                 moduleArea.currentPointIndex = index;
                             }
                             // 处理点位删除
-                            onPointDeleted: function(index) {
+                            onPointDeleted: function (index) {
                                 // 使用moduleData的deletePoint函数删除点位
                                 if (typeof moduleData.deletePoint === "function") {
                                     moduleData.deletePoint(index);
@@ -761,23 +752,16 @@ Item {
                                     // 兼容旧代码，直接操作数组
                                     if (Array.isArray(moduleData.points))
                                         moduleData.points.splice(index, 1);
-
                                 }
                             }
                         }
-
                     }
-
                 }
-
             }
 
             Item {
                 Layout.fillHeight: true
             }
-
         }
-
     }
-
 }

@@ -1,7 +1,7 @@
 import Qt.labs.settings 1.0
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 2.14
+import QtQuick.Controls 2.14
+import QtQuick.Layouts 1.14
 
 Rectangle {
     // 使用XMLHttpRequest清空数据
@@ -24,7 +24,7 @@ Rectangle {
         moduleListSettings.sync();
         console.log("已备份数据");
         moduleListSettings.fileName = "./moduleList.ini";
-        moduleUuids.forEach(function(uuid) {
+        moduleUuids.forEach(function (uuid) {
             moduleListSettings.setValue(uuid, "");
         });
         moduleListSettings.uuidList = "";
@@ -38,7 +38,7 @@ Rectangle {
 
     function loadModuleSettings() {
         // 从Settings加载模块UUID列表
-        var savedUuids = moduleListSettings.uuidList.split(',').filter(function(item) {
+        var savedUuids = moduleListSettings.uuidList.split(',').filter(function (item) {
             return item.trim() !== "";
         });
         // 加载每个模块的设置
@@ -256,7 +256,7 @@ Rectangle {
     }
 
     function generateUUID() {
-        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
             var r = Math.random() * 16 | 0, v = c === 'x' ? r : (r & 3 | 8);
             return v.toString(16);
         });
@@ -284,5 +284,4 @@ Rectangle {
 
         fileName: "./moduleList.ini"
     }
-
 }

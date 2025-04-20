@@ -1,4 +1,4 @@
-import QtQuick 2.15
+import QtQuick 2.14
 
 QtObject {
     // 发出信号通知数据已更新
@@ -6,6 +6,9 @@ QtObject {
     // tags = module.tags;
     // 检查points是否为数组
     // 检查points是否为数组且索引有效
+    // return true;
+    // }
+    // return false;
 
     property string uuid: ""
     property int index: 0
@@ -29,7 +32,7 @@ QtObject {
     property var tags: null
     property string base64: ""
 
-    signal dataChanged()
+    signal dataChanged
     signal selectFinishedChanged(var module)
 
     function selectModule(module, zIndex = -1) {
@@ -97,19 +100,17 @@ QtObject {
 
     function updatePoint(index, property, value) {
         // 检查points是否为数组且索引有效
-        if (!Array.isArray(points) || index < 0 || index >= points.length) {
-            console.log("更新点位失败：无效的点位索引", index);
-            return false;
-        }
+        // if (!Array.isArray(points) || index < 0 || index >= points.length) {
+        //     console.log("更新点位失败：无效的点位索引", index);
+        //     return false;
+        // }
         // 更新点位属性
-        if (points[index]) {
-            points[index][property] = value;
-            console.log("更新点位:", index, property, value);
-            // 同步到设置
-            saveToSettings();
-            return true;
-        }
-        return false;
+        points.setProperty(index, property, value);
+        // if (points[index]) {
+        //     points[index][property] = value;
+        //     console.log("更新点位:", index, property, value);
+        //     // 同步到设置
+        saveToSettings();
     }
 
     function deletePoint() {

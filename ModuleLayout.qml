@@ -1,8 +1,8 @@
 import QtGraphicalEffects 1.0
-import QtQml.Models 2.15 // 使用此导入来支持 DelegateModelGroup
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQml.Models 2.14 // 使用此导入来支持 DelegateModelGroup
+import QtQuick 2.14
+import QtQuick.Controls 2.14
+import QtQuick.Layouts 1.14
 import qmlcpplib.qmlsystem 1.0
 
 Item {
@@ -15,7 +15,7 @@ Item {
     property bool hasBackground: backgroundImage.source != ""
 
     signal backgroundChanged(string source)
-    signal pasteBackground()
+    signal pasteBackground
 
     // 计算拖放位置对应的索引
     function calculateDropIndex(x, y) {
@@ -47,7 +47,7 @@ Item {
         librariesView.hasBackground = true;
     }
     // 键盘事件处理，用于复制粘贴等操作
-    Keys.onPressed: function(event) {
+    Keys.onPressed: function (event) {
         if ((event.key === Qt.Key_V) && (event.modifiers & Qt.ControlModifier)) {
             if (qmlSystem && typeof qmlSystem.ctrlV === "function") {
                 qmlSystem.ctrlV();
@@ -121,7 +121,6 @@ Item {
                             opacity: 0.8
                             z: 10
                         }
-
                     },
                     State {
                         name: "dropTarget"
@@ -133,7 +132,6 @@ Item {
                             border.width: 2
                             scale: 1.02
                         }
-
                     }
                 ]
 
@@ -165,9 +163,7 @@ Item {
                                     height: moduleImage.height
                                     radius: 20
                                 }
-
                             }
-
                         }
 
                         // 默认圆形（当没有图片时显示）
@@ -184,9 +180,7 @@ Item {
                                 font.bold: true
                                 color: "white"
                             }
-
                         }
-
                     }
 
                     ColumnLayout {
@@ -217,9 +211,7 @@ Item {
                             elide: Text.ElideRight
                             Layout.fillWidth: true
                         }
-
                     }
-
                 }
 
                 MouseArea {
@@ -237,7 +229,6 @@ Item {
                         // 选中当前模块
                         if (moduleData && typeof moduleData.selectModule === "function")
                             moduleData.selectModule(model, index);
-
                     }
                     onPositionChanged: {
                         if (delegateItem.isDragging) {
@@ -266,7 +257,6 @@ Item {
                             var item = moduleContainer.children[i];
                             if (item && item.hasOwnProperty("isDropArea"))
                                 item.isDropArea = false;
-
                         }
                         // 在自由布局中，我们可以保存新位置到模型
                         if (delegateItem.x !== delegateItem.startX || delegateItem.y !== delegateItem.startY) {
@@ -304,7 +294,6 @@ Item {
                     onClicked: {
                         if (moduleData && typeof moduleData.selectModule === "function")
                             moduleData.selectModule(model, index);
-
                     }
                 }
 
@@ -313,42 +302,36 @@ Item {
                     NumberAnimation {
                         duration: 100
                     }
-
                 }
 
                 Behavior on y {
                     NumberAnimation {
                         duration: 100
                     }
-
                 }
 
                 Behavior on scale {
                     NumberAnimation {
                         duration: 100
                     }
-
                 }
 
                 Behavior on opacity {
                     NumberAnimation {
                         duration: 100
                     }
-
                 }
 
                 Behavior on border.color {
                     ColorAnimation {
                         duration: 100
                     }
-
                 }
 
                 Behavior on border.width {
                     NumberAnimation {
                         duration: 100
                     }
-
                 }
 
                 layer.effect: DropShadow {
@@ -359,11 +342,8 @@ Item {
                     samples: delegateItem.isDragging ? 17 : 7
                     color: "#30000000"
                 }
-
             }
-
         }
-
     }
 
     // 拖放区域
@@ -407,5 +387,4 @@ Item {
         contentWidth: moduleContainer.width
         contentHeight: Math.max(moduleContainer.height, librariesModel.moduleModel.count * 40)
     }
-
 }

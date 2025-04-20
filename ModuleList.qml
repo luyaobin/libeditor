@@ -1,8 +1,8 @@
 import QtGraphicalEffects 1.0
-import QtQml.Models 2.15 // 使用此导入来支持 DelegateModelGroup
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQml.Models 2.14 // 使用此导入来支持 DelegateModelGroup
+import QtQuick 2.14
+import QtQuick.Controls 2.14
+import QtQuick.Layouts 1.14
 
 Item {
     id: librariesView
@@ -51,7 +51,6 @@ Item {
                         font.bold: true
                         color: "white"
                     }
-
                 }
 
                 ColumnLayout {
@@ -78,9 +77,7 @@ Item {
                         wrapMode: Text.WordWrap
                         horizontalAlignment: Text.AlignHCenter
                     }
-
                 }
-
             }
 
             MouseArea {
@@ -112,9 +109,7 @@ Item {
                     target: delegateItem
                     color: "#e8f4ff"
                 }
-
             }
-
         }
 
         // 改为水平滚动条
@@ -129,9 +124,6 @@ Item {
                 radius: 3
                 color: parent.pressed ? "#606060" : "#909090"
             }
-
         }
-
     }
-
 }

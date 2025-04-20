@@ -1,10 +1,11 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
+import QtQuick 2.14
+import QtQuick.Controls 2.14
 import QtQuick.Dialogs 1.3
-import QtQuick.Layouts 1.15
-import QtQuick.LocalStorage 2.15
-import QtQuick.Window 2.15
-import qmlcpplib.qmlsystem 1.0
+import QtQuick.Layouts 1.14
+import QtQuick.LocalStorage 2.14
+import QtQuick.Window 2.14
+
+// import qmlcpplib.qmlsystem 1.0
 
 Page {
     // 直接使用原始模型
@@ -36,7 +37,6 @@ Page {
             ModuleInfo {
                 anchors.fill: parent
             }
-
         }
 
         Item {
@@ -59,11 +59,8 @@ Page {
                     Layout.fillHeight: true
                     Layout.preferredHeight: 4
                 }
-
             }
-
         }
-
     }
 
     EditorLabelModify {
@@ -77,5 +74,4 @@ Page {
 
         anchors.centerIn: parent
     }
-
 }

@@ -1,8 +1,8 @@
 import QtGraphicalEffects 1.0
-import QtQml.Models 2.15 // 使用此导入来支持 DelegateModelGroup
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQml.Models 2.14 // 使用此导入来支持 DelegateModelGroup
+import QtQuick 2.14
+import QtQuick.Controls 2.14
+import QtQuick.Layouts 1.14
 
 Item {
     id: librariesView
@@ -44,7 +44,7 @@ Item {
         // 更新过滤函数
         function updateFilter() {
             if (!model)
-                return ;
+                return;
 
             for (var i = 0; i < items.count; i++) {
                 var item = items.get(i);
@@ -58,18 +58,15 @@ Item {
                         // 检查是否包含搜索关键词（不区分大小写）
                         if (moduleItem.code.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1 || moduleItem.name.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1)
                             matches = true;
-
                     }
                 }
                 // 根据匹配结果设置组员资格
                 if (matches) {
                     if (!filteredGroup.count(item))
                         filteredGroup.insert(item);
-
                 } else {
                     if (filteredGroup.count(item))
                         filteredGroup.remove(item);
-
                 }
             }
         }
@@ -150,7 +147,6 @@ Item {
                             border.width: 1
                             radius: 4
                         }
-
                     }
 
                     Button {
@@ -175,7 +171,6 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }
-
                     }
 
                     Button {
@@ -192,7 +187,7 @@ Item {
                             const size = librariesModel.moduleModel.count;
                             var lastModule = librariesModel.moduleModel.get(size - 1);
                             if (lastModule && lastModule.name === "")
-                                return ;
+                                return;
 
                             // 使用来自librariesModel的方法添加新模块
                             librariesModel.addModule();
@@ -210,9 +205,7 @@ Item {
                             horizontalAlignment: Text.AlignHCenter
                             verticalAlignment: Text.AlignVCenter
                         }
-
                     }
-
                 }
 
                 // 添加搜索框
@@ -250,9 +243,7 @@ Item {
                                 filterModules();
                             }
 
-                            background: Item {
-                            }
-
+                            background: Item {}
                         }
 
                         // 清除按钮
@@ -270,15 +261,10 @@ Item {
                                     searchInput.focus = true;
                                 }
                             }
-
                         }
-
                     }
-
                 }
-
             }
-
         }
 
         delegate: Rectangle {
@@ -311,7 +297,6 @@ Item {
                         font.bold: true
                         color: "white"
                     }
-
                 }
 
                 ColumnLayout {
@@ -332,9 +317,7 @@ Item {
                         color: "#666666"
                         elide: Text.ElideRight
                     }
-
                 }
-
             }
 
             MouseArea {
@@ -350,7 +333,6 @@ Item {
                         var item = tempModel.items.get(index);
                         if (item && item.model)
                             moduleData.selectModule(item.model);
-
                     } else {
                         // 直接使用原始模型
                         moduleData.selectModule(model);
@@ -376,9 +358,7 @@ Item {
                     target: delegateItem
                     color: "#e8f4ff"
                 }
-
             }
-
         }
 
         ScrollBar.vertical: ScrollBar {
@@ -392,9 +372,6 @@ Item {
                 radius: 3
                 color: parent.pressed ? "#606060" : "#909090"
             }
-
         }
-
     }
-
 }

@@ -12,10 +12,10 @@ Window {
             }
         } catch (error) {
             const i = 1;
-            width = Qt.application.screens[i].width;
-            height = Qt.application.screens[i].height;
+            width = Qt.application.screens[i].width - 16;
+            height = Qt.application.screens[i].height - 80;
             flags = Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint;
-            x = Qt.application.screens[i].virtualX; //+ width * 1.5;
+            x = Qt.application.screens[i].virtualX;
             y = Qt.application.screens[i].virtualY;
         }
         visible = true;
@@ -41,5 +41,4 @@ Window {
         sequence: "Ctrl+Alt+M"
         onActivated: Qt.quit()
     }
-
 }

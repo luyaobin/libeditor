@@ -1,6 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 2.14
+import QtQuick.Controls 2.14
+import QtQuick.Layouts 1.14
 import qmlcpplib.qmlsystem 1.0
 
 Rectangle {
@@ -13,9 +13,9 @@ Rectangle {
     property bool isDraggingPoint: false
     property int currentPointIndex: -1
 
-    signal pasteBackground()
-    signal leftTransparent()
-    signal rightTransparent()
+    signal pasteBackground
+    signal leftTransparent
+    signal rightTransparent
     signal pointAdded(string name, int x, int y)
     signal pointMoved(int index, int x, int y)
     signal backgroundChanged(string source)
@@ -29,7 +29,7 @@ Rectangle {
     }
     color: "#F5F5F5"
     // 粘贴功能
-    Keys.onPressed: function(event) {
+    Keys.onPressed: function (event) {
         if ((event.key === Qt.Key_V) && (event.modifiers & Qt.ControlModifier)) {
             qmlSystem.ctrlV();
             backgroundImage.source = qmlSystem.image;
@@ -122,9 +122,7 @@ Rectangle {
                     }
                 }
             }
-
         }
-
     }
 
     // 拖放区域
@@ -176,11 +174,10 @@ Rectangle {
                     // 为了兼容性，尝试不同的方法添加点位
                     if (Array.isArray(moduleData.points))
                         moduleData.points.push({
-                        "name": pointName,
-                        "rx": parseInt(mouseX),
-                        "ry": parseInt(mouseY)
-                    });
-
+                            "name": pointName,
+                            "rx": parseInt(mouseX),
+                            "ry": parseInt(mouseY)
+                        });
                 }
                 moduleArea.pointAdded(pointName, parseInt(mouseX), parseInt(mouseY));
             }
@@ -193,12 +190,11 @@ Rectangle {
             }
         }
         onPositionChanged: {
-            if (isDragging && moduleArea.isEditing && !moduleArea.isDraggingPoint) {
-            }
+            if (isDragging && moduleArea.isEditing && !moduleArea.isDraggingPoint) {}
         }
         onReleased: {
             if (isDragging && moduleArea.isEditing && !moduleArea.isDraggingPoint) {
-                return ;
+                return;
                 isDragging = false;
                 // 计算拖拽距离
                 var dragDistance = Math.sqrt(Math.pow(mouseX - startX, 2) + Math.pow(mouseY - startY, 2));
@@ -212,16 +208,14 @@ Rectangle {
                         // 为了兼容性，尝试不同的方法添加点位
                         if (Array.isArray(moduleData.points))
                             moduleData.points.push({
-                            "name": pointName,
-                            "rx": parseInt(mouseX),
-                            "ry": parseInt(mouseY)
-                        });
-
+                                "name": pointName,
+                                "rx": parseInt(mouseX),
+                                "ry": parseInt(mouseY)
+                            });
                     }
                     moduleArea.pointAdded(pointName, parseInt(mouseX), parseInt(mouseY));
                 }
             }
         }
     }
-
 }

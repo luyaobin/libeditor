@@ -1,6 +1,6 @@
-import QtQuick 2.15
-import QtQuick.Controls 2.15
-import QtQuick.Layouts 1.15
+import QtQuick 2.14
+import QtQuick.Controls 2.14
+import QtQuick.Layouts 1.14
 
 Rectangle {
     id: pointsArea
@@ -58,7 +58,6 @@ Rectangle {
                     font.pixelSize: 12
                     color: "#666666"
                 }
-
             }
 
             MouseArea {
@@ -69,12 +68,9 @@ Rectangle {
                     pointsArea.pointSelected(index);
                 }
             }
-
         }
 
-        ScrollBar.vertical: ScrollBar {
-        }
-
+        ScrollBar.vertical: ScrollBar {}
     }
 
     // 如果没有点位，显示提示信息
@@ -85,5 +81,4 @@ Rectangle {
         font.pixelSize: 14
         visible: pointsListView.count === 0
     }
-
 }

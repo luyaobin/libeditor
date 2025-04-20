@@ -40,14 +40,14 @@ void QmlSystem::paste()
         QBuffer buffer(&byteArray);
         buffer.open(QIODevice::WriteOnly);
         currentImage.save(&buffer, "PNG");
-        // QByteArray base64Data = byteArray.toBase64();
+
         m_currentImage = "data:image/png;base64," + QString::fromLatin1(byteArray.toBase64());
 
         // 添加base64图片头
         // m_base64Image =  m_base64Image;
-
     }
-    else if (mimeData->hasUrls()) {
+    else if (mimeData->hasUrls())
+    {
         QList<QUrl> urls = mimeData->urls();
         if (!urls.isEmpty())
         {
