@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.14
 Rectangle {
     id: pointsArea
 
-    property var points: []
+    property var points: null
     property bool isEditing: true
 
     signal pointSelected(int index)
@@ -41,15 +41,7 @@ Rectangle {
                 Text {
                     Layout.fillWidth: true
                     Layout.preferredWidth: 100
-                    text: "脚位:" + (moduleData.tags.count > index ? moduleData.tags.get(index).tag : (index + 1) + "(默认)")
-                }
-
-                Text {
-                    Layout.preferredWidth: 100
-                    text: (model.name) ? model.name : "点位" + (index + 1)
-                    font.pixelSize: 14
-                    color: "#333333"
-                    Layout.fillWidth: true
+                    text: "点位:" + (index + 1) // (moduleData.tags.count > index ? moduleData.tags.get(index).tag : (index + 1) + "(默认)")
                 }
 
                 Text {
