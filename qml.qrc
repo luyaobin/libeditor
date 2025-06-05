@@ -2,17 +2,19 @@
     <qresource prefix="/">
         <file>App.qml</file>
         <file>MainPage.qml</file>
+        <file>warelayout/IndexPage.qml</file>
+        <file>warelayout/ModuleInfo.qml</file>
+        <file>warelayout/ModuleLayout.qml</file>
+        <file>warelayout/ModuleArea.qml</file>
+        <file>warelayout/ModuleList.qml</file>
+        <file>warelayout/PointsArea.qml</file>
+        <file>warelayout/Libraries.qml</file>
+        <file>warelayout/EditorLabelModify.qml</file>
+        <file>warelayout/EditorTagModify.qml</file>
         <file>dummydata/serial.qml</file>
         <file>dummydata/callcom/serial.mjs</file>
-        <file>EditorLabelModify.qml</file>
-        <file>EditorTagModify.qml</file>
-        <file>Libraries.qml</file>
-        <file>ModuleArea.qml</file>
-        <file>ModuleInfo.qml</file>
-        <file>ModuleLayout.qml</file>
-        <file>ModuleList.qml</file>
-        <file>PointsArea.qml</file>
         <file>dummydata/librariesModel.qml</file>
         <file>dummydata/moduleData.qml</file>
+        <file>dummydata/projects.qml</file>
     </qresource>
 </RCC>

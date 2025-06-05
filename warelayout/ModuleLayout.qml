@@ -1,4 +1,3 @@
-import QtGraphicalEffects 1.0
 import QtQml.Models 2.14 // 使用此导入来支持 DelegateModelGroup
 import QtQuick 2.14
 import QtQuick.Controls 2.14
@@ -71,14 +70,14 @@ Item {
     }
 
     // 背景图片容器 - 固定800x800尺寸
-    Rectangle {
+    Item {
         anchors.centerIn: parent
         width: 800
         height: 800
-        color: "transparent"
-        border.color: "#dee2e6"
-        border.width: backgroundImage.source !== "" ? 1 : 0
-        radius: 4
+        // color: "transparent"
+        // border.color: "#dee2e6"
+        // border.width: backgroundImage.source !== "" ? 1 : 0
+        // radius: 4
         visible: backgroundImage.source !== ""
         z: 0
 
@@ -108,17 +107,22 @@ Item {
         }
 
         // 尺寸标识
-        Text {
+        Rectangle {
             anchors.bottom: parent.bottom
             anchors.right: parent.right
             anchors.margins: 5
-            text: "800×800"
-            color: "#6c757d"
-            font.pixelSize: 10
-            background: Rectangle {
-                color: "#ffffff"
-                opacity: 0.8
-                radius: 2
+            width: sizeText.width + 6
+            height: sizeText.height + 4
+            color: "#ffffff"
+            opacity: 0.8
+            radius: 2
+
+            Text {
+                id: sizeText
+                anchors.centerIn: parent
+                text: "800×800"
+                color: "#6c757d"
+                font.pixelSize: 10
             }
         }
     }
@@ -262,51 +266,7 @@ Item {
                     }
                 }
 
-                // 平滑过渡效果
-                Behavior on x {
-                    NumberAnimation {
-                        duration: 100
-                    }
-                }
-
-                Behavior on y {
-                    NumberAnimation {
-                        duration: 100
-                    }
-                }
-
-                Behavior on scale {
-                    NumberAnimation {
-                        duration: 100
-                    }
-                }
-
-                Behavior on opacity {
-                    NumberAnimation {
-                        duration: 100
-                    }
-                }
-
-                Behavior on border.color {
-                    ColorAnimation {
-                        duration: 100
-                    }
-                }
-
-                Behavior on border.width {
-                    NumberAnimation {
-                        duration: 100
-                    }
-                }
-
-                layer.effect: DropShadow {
-                    transparentBorder: true
-                    horizontalOffset: delegateItem.isDragging ? 3 : 0
-                    verticalOffset: delegateItem.isDragging ? 3 : 1
-                    radius: delegateItem.isDragging ? 8 : 3
-                    samples: delegateItem.isDragging ? 17 : 7
-                    color: "#30000000"
-                }
+                // 移除所有动画和阴影效果以符合项目规则
             }
         }
     }
