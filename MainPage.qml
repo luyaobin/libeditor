@@ -44,21 +44,8 @@ Page {
             Layout.fillHeight: true
             Layout.preferredWidth: 3
 
-            ColumnLayout {
+            ModuleLayout {
                 anchors.fill: parent
-                spacing: 10
-
-                ModuleList {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.preferredHeight: 1
-                }
-
-                ModuleLayout {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.preferredHeight: 4
-                }
             }
         }
     }

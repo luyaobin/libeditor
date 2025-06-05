@@ -500,6 +500,12 @@ Item {
                         spacing: 5
 
                         Button {
+                            text: "护套仓库"
+                            onClicked:
+                            // moduleArea.pasteBackground();
+                            {}
+                        }
+                        Button {
                             text: "粘贴背景"
                             onClicked: {
                                 moduleArea.pasteBackground();

@@ -58,7 +58,7 @@ Item {
                         // 检查是否包含搜索关键词（不区分大小写）
                         if (moduleItem.code.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1 || moduleItem.name.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1)
                             matches = true;
-                    }
+                     }
                 }
                 // 根据匹配结果设置组员资格
                 if (matches) {

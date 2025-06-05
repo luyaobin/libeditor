@@ -75,7 +75,7 @@ Item {
         id: backgroundImage
 
         anchors.fill: parent
-        visible: source != ""
+        visible: source !== ""
         z: 0
     }
 
@@ -103,9 +103,9 @@ Item {
                 // 使用模型中保存的位置或默认位置
                 x: model.rx > 0 ? model.rx : (index % 3) * 220
                 y: model.ry > 0 ? model.ry : Math.floor(index / 3) * 120
-                width: 200
+                width: 100
                 height: 100
-                radius: 5
+                radius: 50
                 border.color: isDropArea ? "#4a90e2" : "#e0e0e0"
                 border.width: isDropArea ? 2 : 1
                 layer.enabled: true
@@ -134,85 +134,6 @@ Item {
                         }
                     }
                 ]
-
-                // 内容布局
-                RowLayout {
-                    anchors.fill: parent
-                    anchors.margins: 10
-                    spacing: 10
-
-                    Item {
-                        width: 40
-                        height: 40
-                        Layout.alignment: Qt.AlignVCenter
-
-                        // 如果有图片则显示图片，否则显示默认圆形
-                        Image {
-                            id: moduleImage
-
-                            anchors.fill: parent
-                            source: model.base64 ? model.base64 : ""
-                            fillMode: Image.PreserveAspectFit
-                            visible: source !== ""
-                            layer.enabled: visible
-
-                            layer.effect: OpacityMask {
-
-                                maskSource: Rectangle {
-                                    width: moduleImage.width
-                                    height: moduleImage.height
-                                    radius: 20
-                                }
-                            }
-                        }
-
-                        // 默认圆形（当没有图片时显示）
-                        Rectangle {
-                            anchors.fill: parent
-                            radius: 20
-                            color: "#4a90e2"
-                            visible: !moduleImage.visible || moduleImage.source === ""
-
-                            Text {
-                                anchors.centerIn: parent
-                                text: model.code ? model.code.substring(0, 1) : ""
-                                font.pixelSize: 16
-                                font.bold: true
-                                color: "white"
-                            }
-                        }
-                    }
-
-                    ColumnLayout {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        spacing: 5
-
-                        Text {
-                            text: model.code ? model.code : ""
-                            font.pixelSize: 14
-                            font.bold: true
-                            color: "#333333"
-                            elide: Text.ElideRight
-                        }
-
-                        Text {
-                            text: model.name ? model.name : ""
-                            font.pixelSize: 12
-                            color: "#666666"
-                            elide: Text.ElideRight
-                            Layout.fillWidth: true
-                        }
-
-                        Text {
-                            text: model.meta ? model.meta : ""
-                            font.pixelSize: 10
-                            color: "#999999"
-                            elide: Text.ElideRight
-                            Layout.fillWidth: true
-                        }
-                    }
-                }
 
                 MouseArea {
                     id: dragArea
