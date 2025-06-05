@@ -76,7 +76,8 @@ Rectangle {
             "checks": [],
             "airChecks": [],
             "tags": [],
-            "base64": ""
+            "base64": "",
+            "nstate": 0
         };
         moduleListSettings.setValue(uuid, JSON.stringify(newModule));
         moduleListSettings.uuidList = moduleUuids.join(',');
@@ -106,7 +107,8 @@ Rectangle {
             "checks": [],
             "airChecks": [],
             "tags": [],
-            "base64": imagePath
+            "base64": imagePath,
+            "nstate": 0
         };
         moduleListSettings.setValue(uuid, JSON.stringify(newModule));
         moduleListSettings.uuidList = moduleUuids.join(',');
@@ -181,7 +183,8 @@ Rectangle {
                 "checks": checksArray,
                 "airChecks": airChecksArray,
                 "tags": [],
-                "base64": moduleRef.base64
+                "base64": moduleRef.base64,
+                "nstate": 0
             };
             moduleListSettings.setValue(moduleRef.uuid, JSON.stringify(newModule));
         }
@@ -241,7 +244,8 @@ Rectangle {
             "tags": tags,
             "base64": module.base64,
             "checks": checks,
-            "airChecks": airChecks
+            "airChecks": airChecks,
+            "nstate": module.nstate
         };
         moduleListSettings.setValue(module.uuid, JSON.stringify(result));
         moduleModel.setProperty(index, "uuid", module.uuid);
@@ -260,6 +264,7 @@ Rectangle {
         moduleModel.setProperty(index, "strLight", module.strLight);
         moduleModel.setProperty(index, "strValue", module.strValue);
         moduleModel.setProperty(index, "base64", module.base64);
+        moduleModel.setProperty(index, "nstate", module.nstate);
     }
 
     function moveModule(fromIndex, toIndex) {

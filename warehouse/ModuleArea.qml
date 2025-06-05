@@ -244,7 +244,7 @@ Rectangle {
         color: "#ffffff"
         border.color: "#dee2e6"
         radius: 6
-        visible: moduleArea.isEditing
+        visible: false
 
         RowLayout {
             id: toolRow

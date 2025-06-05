@@ -155,27 +155,27 @@ Rectangle {
                     }
 
                     // 删除按钮
-                    Button {
-                        visible: pointsArea.isEditing && !delegateItem.held
-                        text: "×"
-                        implicitWidth: 20
-                        implicitHeight: 20
-                        onClicked: pointsArea.pointDeleted(index)
+                    // Button {
+                    //     visible: pointsArea.isEditing && !delegateItem.held
+                    //     text: "×"
+                    //     implicitWidth: 20
+                    //     implicitHeight: 20
+                    //     onClicked: pointsArea.pointDeleted(index)
 
-                        background: Rectangle {
-                            color: parent.hovered ? "#dc3545" : "#6c757d"
-                            radius: 10
-                        }
+                    //     background: Rectangle {
+                    //         color: parent.hovered ? "#dc3545" : "#6c757d"
+                    //         radius: 10
+                    //     }
 
-                        contentItem: Text {
-                            text: parent.text
-                            color: "white"
-                            horizontalAlignment: Text.AlignHCenter
-                            verticalAlignment: Text.AlignVCenter
-                            font.pixelSize: 12
-                            font.bold: true
-                        }
-                    }
+                    //     contentItem: Text {
+                    //         text: parent.text
+                    //         color: "white"
+                    //         horizontalAlignment: Text.AlignHCenter
+                    //         verticalAlignment: Text.AlignVCenter
+                    //         font.pixelSize: 12
+                    //         font.bold: true
+                    //     }
+                    // }
                 }
             }
 

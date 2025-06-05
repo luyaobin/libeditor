@@ -201,225 +201,6 @@ ColumnLayout {
             Layout.preferredWidth: 1
             spacing: 10
 
-            // 模块信息编辑区域
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.preferredHeight: 280
-                color: "#ffffff"
-                border.color: "#dee2e6"
-                border.width: 1
-                radius: 6
-
-                ColumnLayout {
-                    anchors.fill: parent
-                    anchors.margins: 10
-                    spacing: 8
-
-                    Text {
-                        text: "模块详情"
-                        font.pixelSize: 14
-                        font.bold: true
-                        color: "#495057"
-                    }
-
-                    ScrollView {
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        clip: true
-
-                        ColumnLayout {
-                            width: parent.width
-                            spacing: 8
-
-                            // 模块型号
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 8
-
-                                Text {
-                                    text: "模块型号:"
-                                    font.pixelSize: 12
-                                    color: "#495057"
-                                    font.bold: true
-                                    Layout.preferredWidth: 70
-                                }
-
-                                TextField {
-                                    id: metaTextField
-                                    Layout.fillWidth: true
-                                    readOnly: true
-                                    text: ""
-                                    placeholderText: "请输入模块型号"
-                                    font.pixelSize: 11
-                                    // onTextChanged: {
-                                    //     if (banSave)
-                                    //         return;
-                                    //     moduleData.meta = text;
-                                    //     moduleData.dataChanged();
-                                    // }
-
-                                    background: Rectangle {
-                                        color: "#ffffff"
-                                        border.color: parent.focus ? "#007bff" : "#ced4da"
-                                        border.width: 1
-                                        radius: 3
-                                    }
-                                }
-                            }
-
-                            // 引脚数量
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 8
-                                visible: false
-                                Text {
-                                    text: "引脚数量:"
-                                    font.pixelSize: 12
-                                    color: "#495057"
-                                    font.bold: true
-                                    Layout.preferredWidth: 70
-                                }
-
-                                SpinBox {
-                                    id: ioNumSpinBox
-                                    Layout.preferredWidth: 100
-                                    value: moduleData.ioNum
-                                    from: 0
-                                    to: 99
-                                    editable: true
-                                    onValueChanged: {
-                                        if (banSave)
-                                            return;
-                                        moduleData.ioNum = value;
-                                        moduleData.dataChanged();
-                                    }
-
-                                    background: Rectangle {
-                                        implicitHeight: 28
-                                        color: "#ffffff"
-                                        border.color: parent.focus ? "#007bff" : "#ced4da"
-                                        border.width: 1
-                                        radius: 3
-                                    }
-
-                                    contentItem: TextInput {
-                                        text: parent.textFromValue(parent.value, parent.locale)
-                                        color: "#212529"
-                                        selectByMouse: true
-                                        horizontalAlignment: Qt.AlignHCenter
-                                        verticalAlignment: Qt.AlignVCenter
-                                        font.pixelSize: 11
-                                    }
-                                }
-
-                                Text {
-                                    text: "实际: " + (moduleData.points ? moduleData.points.count : 0)
-                                    color: "#6c757d"
-                                    font.pixelSize: 10
-                                    Layout.fillWidth: true
-                                }
-
-                                Button {
-                                    text: "删除尾点"
-                                    implicitHeight: 28
-                                    implicitWidth: 70
-                                    onClicked: moduleData.deletePoint()
-
-                                    background: Rectangle {
-                                        color: parent.hovered ? "#c82333" : "#dc3545"
-                                        radius: 3
-                                    }
-
-                                    contentItem: Text {
-                                        text: parent.text
-                                        color: "white"
-                                        horizontalAlignment: Text.AlignHCenter
-                                        verticalAlignment: Text.AlignVCenter
-                                        font.pixelSize: 10
-                                        font.bold: true
-                                    }
-                                }
-                            }
-
-                            // 锁片对数
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 8
-
-                                Text {
-                                    text: "锁片对数:"
-                                    font.pixelSize: 12
-                                    color: "#495057"
-                                    font.bold: true
-                                    Layout.preferredWidth: 70
-                                }
-
-                                RowLayout {
-                                    Layout.fillWidth: true
-                                    spacing: 4
-
-                                    Repeater {
-                                        model: 7
-
-                                        delegate: Rectangle {
-                                            width: 24
-                                            height: 24
-                                            color: index === moduleData.lockNum ? "#007bff" : "#f8f9fa"
-                                            border.color: index === moduleData.lockNum ? "#0056b3" : "#dee2e6"
-                                            border.width: 1
-                                            radius: 3
-
-                                            Text {
-                                                anchors.centerIn: parent
-                                                text: index
-                                                font.pixelSize: 10
-                                                font.bold: true
-                                                color: index === moduleData.lockNum ? "white" : "#495057"
-                                            }
-
-                                            MouseArea {
-                                                anchors.fill: parent
-                                                onClicked: {
-                                                    moduleData.lockNum = index;
-                                                    moduleData.dataChanged();
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-
-                            // 气密存在
-                            RowLayout {
-                                Layout.fillWidth: true
-                                spacing: 8
-
-                                Text {
-                                    text: "气密存在:"
-                                    font.pixelSize: 12
-                                    color: "#495057"
-                                    font.bold: true
-                                    Layout.preferredWidth: 70
-                                }
-
-                                CheckBox {
-                                    id: airCheckBox
-                                    checked: false
-                                    text: "存在气密"
-                                    font.pixelSize: 11
-                                    onCheckedChanged: {
-                                        if (banSave)
-                                            return;
-                                        moduleData.airNum = checked ? 1 : 0;
-                                        moduleData.dataChanged();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-
             // 点位列表区域
             Rectangle {
                 Layout.fillWidth: true
@@ -447,7 +228,26 @@ ColumnLayout {
                         Item {
                             Layout.fillWidth: true
                         }
+                        Button {
+                            text: "×"
+                            implicitWidth: 20
+                            implicitHeight: 20
+                            onClicked: pointsArea.pointDeleted(0)
 
+                            background: Rectangle {
+                                color: parent.hovered ? "#dc3545" : "#6c757d"
+                                radius: 10
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                font.pixelSize: 12
+                                font.bold: true
+                            }
+                        }
                         Text {
                             text: "共 " + (moduleData.points ? moduleData.points.count : 0) + " 个"
                             font.pixelSize: 12

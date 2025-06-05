@@ -1,4 +1,3 @@
-import QtGraphicalEffects 1.0
 import QtQml.Models 2.14 // 使用此导入来支持 DelegateModelGroup
 import QtQuick 2.14
 import QtQuick.Controls 2.14
@@ -58,7 +57,7 @@ Item {
                         // 检查是否包含搜索关键词（不区分大小写）
                         if (moduleItem.code.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1 || moduleItem.name.toLowerCase().indexOf(searchFilter.toLowerCase()) !== -1)
                             matches = true;
-                     }
+                    }
                 }
                 // 根据匹配结果设置组员资格
                 if (matches) {
@@ -126,38 +125,13 @@ Item {
                         color: "#333333"
                     }
 
-                    Item {
-                        Layout.fillWidth: true
-                    }
-
-                    TextField {
-                        id: serialPortField
-
-                        Layout.preferredWidth: 120
-                        Layout.preferredHeight: 40
-                        placeholderText: "串口号"
-                        text: serial.settings.portName
-                        onEditingFinished: {
-                            // 保存串口号到配置文件
-                            serial.settings.portName = text;
-                        }
-
-                        background: Rectangle {
-                            border.color: "#dcdfe6"
-                            border.width: 1
-                            radius: 4
-                        }
-                    }
-
                     Button {
                         // 显示提示信息
 
-                        text: "列表导入"
+                        text: "仓库管理"
                         Layout.preferredWidth: 120
                         Layout.preferredHeight: 40
-                        onClicked: {
-                            editorLabelModify.open();
-                        }
+                        onClicked: {}
 
                         background: Rectangle {
                             color: parent.pressed ? "#3a7ab3" : "#4a90e2"
@@ -172,25 +146,33 @@ Item {
                             verticalAlignment: Text.AlignVCenter
                         }
                     }
-
                     Button {
-                        // 显示提示信息
-
                         text: "添加模块"
                         Layout.preferredWidth: 120
                         Layout.preferredHeight: 40
-                        ToolTip.text: "添加模块 (最后一个模块无名称时不允许添加)"
-                        ToolTip.visible: hovered
-                        ToolTip.delay: 500
-                        onClicked: {
-                            // 检查最后一个模块的名称是否为空
-                            const size = librariesModel.moduleModel.count;
-                            var lastModule = librariesModel.moduleModel.get(size - 1);
-                            if (lastModule && lastModule.name === "")
-                                return;
+                        onClicked: {}
 
-                            // 使用来自librariesModel的方法添加新模块
-                            librariesModel.addModule();
+                        background: Rectangle {
+                            color: parent.pressed ? "#3a7ab3" : "#4a90e2"
+                            radius: 5
+                        }
+
+                        contentItem: Text {
+                            text: parent.text
+                            font.pixelSize: 14
+                            color: "white"
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                        }
+                    }
+                    Button {
+                        // 显示提示信息
+
+                        text: "回路导入"
+                        Layout.preferredWidth: 120
+                        Layout.preferredHeight: 40
+                        onClicked: {
+                            editorLabelModify.open();
                         }
 
                         background: Rectangle {
@@ -276,8 +258,6 @@ Item {
             radius: 5
             border.color: "#e0e0e0"
             border.width: 1
-            // 添加阴影效果
-            layer.enabled: true
 
             RowLayout {
                 anchors.fill: parent
@@ -288,11 +268,11 @@ Item {
                     width: 40
                     height: 40
                     radius: 20
-                    color: "#4a90e2"
+                    color: model.nstate === 1 ? "red" : "green"
 
                     Text {
                         anchors.centerIn: parent
-                        text: code.substring(0, 1)
+                        text: (index + 1)
                         font.pixelSize: 16
                         font.bold: true
                         color: "white"
@@ -304,7 +284,7 @@ Item {
                     spacing: 3
 
                     Text {
-                        text: code
+                        text: model.code
                         font.pixelSize: 14
                         font.bold: true
                         color: "#333333"
@@ -312,7 +292,7 @@ Item {
                     }
 
                     Text {
-                        text: name
+                        text: model.name
                         font.pixelSize: 13
                         color: "#666666"
                         elide: Text.ElideRight
@@ -338,15 +318,6 @@ Item {
                         moduleData.selectModule(model);
                     }
                 }
-            }
-
-            layer.effect: DropShadow {
-                transparentBorder: true
-                horizontalOffset: 0
-                verticalOffset: 1
-                radius: 3
-                samples: 7
-                color: "#20000000"
             }
 
             // 添加鼠标悬停效果

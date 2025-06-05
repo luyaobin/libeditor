@@ -46,12 +46,18 @@ Rectangle {
         console.log("清空项目数据完成，项目数量:", projectModel.count);
     }
 
+    function rebuild() {
+    // 重建功能预留
+    }
+
     // 从设置文件加载项目数据
     function loadProjectSettings() {
+        // 从Settings加载项目UUID列表
         var savedUuids = projectSettings.uuidList.split(',').filter(function (item) {
             return item.trim() !== "";
         });
 
+        // 加载每个项目的设置
         const uuidList = [];
         for (var i = 0; i < savedUuids.length; i++) {
             const project = projectSettings.value(savedUuids[i]);
@@ -147,17 +153,42 @@ Rectangle {
             projectData.updateTime = new Date().toISOString();
             projectData.uuid = uuid;
 
-            // 更新模型
-            for (let key in projectData) {
-                if (projectData.hasOwnProperty(key)) {
-                    projectModel.setProperty(index, key, projectData[key]);
+            // 构建完整的项目数据
+            const result = {
+                "uuid": uuid,
+                "name": projectData.name,
+                "description": projectData.description,
+                "createTime": project.createTime,
+                "updateTime": projectData.updateTime,
+                "modules": projectData.modules || [],
+                "layoutConfig": projectData.layoutConfig || {
+                    "width": 1200,
+                    "height": 800,
+                    "scale": 1.0,
+                    "offsetX": 0,
+                    "offsetY": 0
+                },
+                "settings": projectData.settings || {
+                    "gridSize": 20,
+                    "snapToGrid": true,
+                    "showGrid": true
                 }
-            }
+            };
 
             // 保存到设置
-            projectSettings.setValue(uuid, JSON.stringify(projectData));
+            projectSettings.setValue(uuid, JSON.stringify(result));
 
-            console.log("更新项目成功:", projectData.name);
+            // 更新模型
+            projectModel.setProperty(index, "uuid", result.uuid);
+            projectModel.setProperty(index, "name", result.name);
+            projectModel.setProperty(index, "description", result.description);
+            projectModel.setProperty(index, "createTime", result.createTime);
+            projectModel.setProperty(index, "updateTime", result.updateTime);
+            projectModel.setProperty(index, "modules", result.modules);
+            projectModel.setProperty(index, "layoutConfig", result.layoutConfig);
+            projectModel.setProperty(index, "settings", result.settings);
+
+            console.log("更新项目成功:", result.name);
         }
     }
 
@@ -206,6 +237,32 @@ Rectangle {
         return "";
     }
 
+    // 移动项目位置
+    function moveProject(fromIndex, toIndex) {
+        if (fromIndex === toIndex || fromIndex < 0 || toIndex < 0 || fromIndex >= projectModel.count || toIndex >= projectModel.count)
+            return false;
+
+        // 保存源和目标项目
+        var sourceProject = projectModel.get(fromIndex);
+        var targetProject = projectModel.get(toIndex);
+        if (sourceProject && targetProject) {
+            // 交换UUID在数组中的位置
+            var tempUuid = projectUuids[fromIndex];
+            projectUuids[fromIndex] = projectUuids[toIndex];
+            projectUuids[toIndex] = tempUuid;
+
+            // 更新UUID列表
+            projectSettings.uuidList = projectUuids.join(',');
+
+            // 移动模型中的项目
+            projectModel.move(fromIndex, toIndex, 1);
+
+            console.log("移动项目成功: 从", fromIndex, "到", toIndex);
+            return true;
+        }
+        return false;
+    }
+
     // 导出项目数据
     function exportProject(index) {
         if (index >= 0 && index < projectModel.count) {
@@ -238,6 +295,17 @@ Rectangle {
         }
     }
 
+    // 组件完成时加载数据
+    Component.onCompleted: {
+        loadProjectSettings();
+        console.log("projects onCompleted", projectModel.count);
+    }
+
+    color: "#ffffff"
+    border.color: "#cccccc"
+    border.width: 1
+    radius: 5
+
     // 项目数据模型
     ListModel {
         id: projectModel
@@ -246,12 +314,7 @@ Rectangle {
     // 项目设置存储
     Settings {
         id: projectSettings
-        fileName: "./projects.ini"
         property string uuidList: ""
-    }
-
-    // 组件完成时加载数据
-    Component.onCompleted: {
-        loadProjectSettings();
+        fileName: "./projects.ini"
     }
 }

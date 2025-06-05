@@ -5,7 +5,7 @@ import QtQuick.Layouts 1.14
 Rectangle {
     id: pointsArea
 
-    property var points: null
+    property var points: []
     property bool isEditing: true
 
     signal pointSelected(int index)
