@@ -66,7 +66,7 @@ QtObject {
     function addPoint(x, y, name) {
         // 添加新点位
         var newPoint = {
-            "name": name || "点位" + (points.length + 1),
+            "name": name || "点位" + (points.count + 1),
             "rx": x,
             "ry": y
         };
@@ -79,7 +79,7 @@ QtObject {
     function addCheck(x, y, name) {
         // 添加新点位
         var newPoint = {
-            "name": name || "点位" + (points.length + 1),
+            "name": name || "点位" + (checks.count + 1),
             "rx": x,
             "ry": y
         };
@@ -90,7 +90,7 @@ QtObject {
     function addAirCheck(x, y, name) {
         // 添加新点位
         var newPoint = {
-            "name": name || "点位" + (points.length + 1),
+            "name": name || "点位" + (airChecks.count + 1),
             "rx": x,
             "ry": y
         };

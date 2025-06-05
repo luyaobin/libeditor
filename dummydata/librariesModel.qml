@@ -83,6 +83,37 @@ Rectangle {
         moduleModel.append(newModule);
     }
 
+    function addModuleWithImage(moduleName, imagePath) {
+        const uuid = generateUUID();
+        moduleUuids.push(uuid);
+        const newModule = {
+            "uuid": uuid,
+            "rx": 0,
+            "ry": 0,
+            "rwidth": 0,
+            "rheight": 0,
+            "ioNum": 0,
+            "lockNum": 0,
+            "airNum": 0,
+            "scale": 0,
+            "name": moduleName,
+            "code": moduleName,
+            "site": "",
+            "meta": moduleName,
+            "strLight": "",
+            "strValue": "",
+            "points": [],
+            "checks": [],
+            "airChecks": [],
+            "tags": [],
+            "base64": imagePath
+        };
+        moduleListSettings.setValue(uuid, JSON.stringify(newModule));
+        moduleListSettings.uuidList = moduleUuids.join(',');
+        moduleModel.append(newModule);
+        console.log("添加模块成功:", moduleName, "图片:", imagePath);
+    }
+
     function fixModule(index, code, name, meta, ioNum, lockNum, airNum) {
         const moduleRef = moduleModel.get(index);
         if (index !== -1) {

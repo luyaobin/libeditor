@@ -19,7 +19,6 @@ Item {
             ioNumSpinBox.value = module.ioNum;
             airCheckBox.checked = module.airNum === 1;
             strValueTextField.text = module.strValue;
-            moduleArea.backgroundSource = module.base64;
             banSave = false;
         }
 
@@ -461,33 +460,6 @@ Item {
                             }
                         }
                     }
-
-                    MouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            console.log("点击了");
-                            const tags = [];
-                            for (let i = 0; i < moduleData.tags.count; i++) {
-                                tags.push(moduleData.tags.get(i).tag);
-                            }
-                            editorTagModify.setCallback(tags.join("\n"), function (data) {
-                                const tagsResult = data.split("\n");
-                                const models = [];
-                                console.log("tags", tagsResult);
-                                for (let i = 0; i < tagsResult.length; i++) {
-                                    console.log("tags[i]", tagsResult[i]);
-                                    models.push({
-                                        "tag": tagsResult[i]
-                                    });
-                                }
-                                moduleData.tags.clear();
-                                moduleData.tags.append(models);
-                                console.log("moduleData.tags", moduleData.tags.count);
-                                moduleData.dataChanged();
-                            });
-                            editorTagModify.open();
-                        }
-                    }
                 }
 
                 Item {
@@ -495,57 +467,11 @@ Item {
                     height: 32
                     Layout.columnSpan: 2
 
-                    RowLayout {
-                        anchors.fill: parent
-                        spacing: 5
-
-                        Button {
-                            text: "护套仓库"
-                            onClicked:
-                            // moduleArea.pasteBackground();
-                            {}
-                        }
-                        Button {
-                            text: "粘贴背景"
-                            onClicked: {
-                                moduleArea.pasteBackground();
-                            }
-                        }
-
-                        Button {
-                            text: "背景左转"
-                            onClicked: {
-                                moduleArea.leftTransparent();
-                            }
-                        }
-
-                        Button {
-                            text: "背景右转"
-                            onClicked: {
-                                moduleArea.rightTransparent();
-                            }
-                        }
-                    }
-                }
-
-                Item {
-                    Layout.fillWidth: true
-                    Layout.fillHeight: true
-                    Layout.columnSpan: 2
-
-                    Rectangle {
-                        anchors.fill: parent
-                        color: "#f0f7ff"
-                        border.color: "#c0d7ff"
-                        border.width: 1
-                        radius: 4
-
-                        ModuleArea {
-                            id: moduleArea
-
-                            anchors.fill: parent
-                            points: moduleData.points
-                        }
+                    ModuleLayout {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.columnSpan: 2
+                        moduleData: moduleData
                     }
                 }
 
@@ -724,44 +650,7 @@ Item {
                 }
 
                 Item {
-                    Layout.fillWidth: true
                     Layout.fillHeight: true
-                    Layout.columnSpan: 2
-
-                    Rectangle {
-                        anchors.fill: parent
-                        color: "#f0f7ff"
-                        border.color: "#c0d7ff"
-                        border.width: 1
-                        radius: 4
-
-                        PointsArea {
-                            id: pointsArea
-
-                            anchors.fill: parent
-                            anchors.margins: 5
-                            points: moduleData.points
-                            isEditing: true
-                            // 处理点位选择
-                            onPointSelected: function (index) {
-                                // 可以在这里实现选中点位的处理逻辑
-                                console.log("选中点位:", index);
-                                // 同步选中状态到ModuleArea
-                                moduleArea.currentPointIndex = index;
-                            }
-                            // 处理点位删除
-                            onPointDeleted: function (index) {
-                                // 使用moduleData的deletePoint函数删除点位
-                                if (typeof moduleData.deletePoint === "function") {
-                                    moduleData.deletePoint(index);
-                                } else {
-                                    // 兼容旧代码，直接操作数组
-                                    if (Array.isArray(moduleData.points))
-                                        moduleData.points.splice(index, 1);
-                                }
-                            }
-                        }
-                    }
                 }
             }
 

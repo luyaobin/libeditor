@@ -49,12 +49,56 @@ Rectangle {
         id: qmlSystem
     }
 
-    Image {
-        id: backgroundImage
+    // 背景图片容器 - 固定800x800尺寸
+    Rectangle {
+        anchors.centerIn: parent
+        width: 800
+        height: 800
+        color: "transparent"
+        border.color: "#dee2e6"
+        border.width: backgroundImage.source != "" ? 1 : 0
+        radius: 4
+        visible: backgroundImage.source != ""
 
-        anchors.fill: parent
-        // fillMode: Image.PreserveAspectFit
-        visible: source != ""
+        Image {
+            id: backgroundImage
+            anchors.centerIn: parent
+            fillMode: Image.PreserveAspectFit
+            width: Math.min(800, implicitWidth)
+            height: Math.min(800, implicitHeight)
+
+            // 确保图片不会超出800x800的范围
+            onImplicitWidthChanged: {
+                if (implicitWidth > 0 && implicitHeight > 0) {
+                    var scale = Math.min(800 / implicitWidth, 800 / implicitHeight);
+                    width = implicitWidth * scale;
+                    height = implicitHeight * scale;
+                }
+            }
+
+            onImplicitHeightChanged: {
+                if (implicitWidth > 0 && implicitHeight > 0) {
+                    var scale = Math.min(800 / implicitWidth, 800 / implicitHeight);
+                    width = implicitWidth * scale;
+                    height = implicitHeight * scale;
+                }
+            }
+        }
+
+        // 尺寸标识
+        Text {
+            anchors.bottom: parent.bottom
+            anchors.right: parent.right
+            anchors.margins: 5
+            text: "800×800"
+            color: "#6c757d"
+            font.pixelSize: 10
+            background: Rectangle {
+                color: "#ffffff"
+                opacity: 0.8
+                radius: 2
+            }
+        }
     }
 
     // 点位显示
@@ -147,7 +191,7 @@ Rectangle {
         anchors.centerIn: parent
         text: "拖放图片或使用Ctrl+V粘贴"
         color: "#999999"
-        visible: !backgroundImage.source
+        visible: backgroundImage.source === ""
     }
 
     // 点击添加点位

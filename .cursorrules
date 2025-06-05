@@ -1,0 +1,74 @@
+# Cursor 编辑规则 - libeditor 工程
+
+## 通用规则
+- 始终使用中文简体进行回复和注释
+- 专注于功能实现，避免不必要的视觉效果
+- 保持代码简洁、高效、可维护
+
+## QML 开发规则
+
+### 禁用效果
+- **禁止使用任何动画效果**：
+  - 不得使用 `Behavior` 组件
+  - 不得使用 `NumberAnimation`、`ColorAnimation`、`PropertyAnimation` 等动画组件
+  - 不得使用 `Transition` 和 `State` 进行动画过渡
+
+- **禁止使用阴影效果**：
+  - 不得使用 `layer.effect: DropShadow`
+  - 不得设置 `layer.enabled: true` 用于阴影
+  - 避免使用任何形式的阴影或发光效果
+
+### 样式指南
+- 使用简洁的矩形边框和纯色背景
+- 颜色变化通过直接赋值，不使用渐变动画
+- 按钮悬停效果通过 `hovered` 属性直接切换颜色
+- 使用 `radius` 属性设置圆角，但保持简洁
+
+### 性能优化
+- 避免复杂的视觉效果以提高性能
+- 优先使用基础 Rectangle、Text、Button 等组件
+- 减少不必要的嵌套和复杂布局
+
+### 代码结构
+- 保持组件层次清晰
+- 使用描述性的 id 命名
+- 将复杂逻辑分离到独立的组件或 JavaScript 函数中
+
+### 示例：正确的按钮样式
+```qml
+Button {
+    background: Rectangle {
+        color: parent.hovered ? "#f56c6c" : "#fa8c8c"
+        radius: 6
+        // 不使用 Behavior 动画
+    }
+}
+```
+
+### 示例：正确的输入框样式
+```qml
+Rectangle {
+    color: "#f5f7fa"
+    border.color: parent.focus ? "#409EFF" : "#dcdfe6"
+    border.width: parent.focus ? 2 : 1
+    radius: 6
+    // 不使用 layer.effect 阴影
+}
+```
+
+## 特定文件规则
+
+### ModuleInfo.qml、ModuleLayout.qml、Libraries.qml 等
+- 移除所有现有的动画和阴影效果
+- 保持功能完整性
+- 简化视觉反馈，使用直接的颜色和状态变化
+
+### 编辑器组件 (EditorTagModify.qml, EditorLabelModify.qml)
+- 专注于编辑功能的实现
+- 使用简单的高亮和选中状态显示
+- 避免复杂的过渡效果
+
+## 调试和维护
+- 优先考虑代码的可读性和维护性
+- 使用 console.log 进行调试，而不是复杂的视觉反馈
+- 保持组件的单一职责原则 
