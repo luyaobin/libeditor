@@ -105,26 +105,6 @@ Item {
                 }
             }
         }
-
-        // 尺寸标识
-        Rectangle {
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.margins: 5
-            width: sizeText.width + 6
-            height: sizeText.height + 4
-            color: "#ffffff"
-            opacity: 0.8
-            radius: 2
-
-            Text {
-                id: sizeText
-                anchors.centerIn: parent
-                text: "800×800"
-                color: "#6c757d"
-                font.pixelSize: 10
-            }
-        }
     }
 
     // 自由布局容器
@@ -182,6 +162,18 @@ Item {
                         }
                     }
                 ]
+                // 显示模块名称
+                Text {
+                    anchors.centerIn: parent
+                    text: model.name || "未知模块"
+                    font.pixelSize: 12
+                    font.family: "Microsoft YaHei"
+                    color: "#333333"
+                    horizontalAlignment: Text.AlignHCenter
+                    verticalAlignment: Text.AlignVCenter
+                    wrapMode: Text.WordWrap
+                    width: parent.width - 10
+                }
 
                 MouseArea {
                     id: dragArea
@@ -261,8 +253,11 @@ Item {
                         }
                     }
                     onClicked: {
-                        if (moduleData && typeof moduleData.selectModule === "function")
+                        if (moduleData && typeof moduleData.selectModule === "function") {
                             moduleData.selectModule(model, index);
+                            // 打开模块详情弹出窗口
+                            moduleDetailPopup.openModuleDetail(model, index);
+                        }
                     }
                 }
 
@@ -311,5 +306,632 @@ Item {
         // 设置内容大小，确保可以滚动查看所有模块
         contentWidth: moduleContainer.width
         contentHeight: Math.max(moduleContainer.height, librariesModel.moduleModel.count * 40)
+    }
+
+    // 模块详情弹出窗口
+    Popup {
+        id: moduleDetailPopup
+
+        property var currentModule: null
+        property int currentIndex: -1
+        property bool banSave: true
+
+        anchors.centerIn: parent
+        width: parent.width * 0.9
+        height: parent.height * 0.9
+        padding: 0
+        modal: true
+        closePolicy: Popup.CloseOnEscape | Popup.CloseOnPressOutside
+
+        function openModuleDetail(module, index) {
+            currentModule = module;
+            currentIndex = index;
+            updateFields();
+            open();
+        }
+
+        function updateFields() {
+            if (!currentModule)
+                return;
+            banSave = true;
+            metaTextField.text = currentModule.meta || "";
+            ioNumSpinBox.value = currentModule.ioNum || 0;
+            airCheckBox.checked = currentModule.airNum === 1;
+            banSave = false;
+        }
+
+        Rectangle {
+            width: moduleDetailPopup.width
+            height: moduleDetailPopup.height
+            color: "#ffffff"
+            border.color: "#dee2e6"
+            border.width: 1
+            radius: 6
+
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 10
+                spacing: 10
+
+                // 工具栏
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 50
+                    color: "#f8f9fa"
+                    border.color: "#dee2e6"
+                    border.width: 1
+                    radius: 6
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 10
+                        spacing: 10
+
+                        Text {
+                            text: "模块详情 - " + (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.meta || "未命名模块" : "")
+                            font.pixelSize: 14
+                            font.bold: true
+                            color: "#495057"
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        Button {
+                            text: "护套仓库"
+                            implicitHeight: 32
+                            onClicked: {
+                                console.log("打开护套仓库");
+                            }
+
+                            background: Rectangle {
+                                color: parent.hovered ? "#5a6268" : "#6c757d"
+                                radius: 4
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                font.pixelSize: 12
+                            }
+                        }
+
+                        Button {
+                            text: "粘贴背景"
+                            implicitHeight: 32
+                            onClicked: popupModuleArea.pasteBackground()
+
+                            background: Rectangle {
+                                color: parent.hovered ? "#0056b3" : "#007bff"
+                                radius: 4
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                font.pixelSize: 12
+                            }
+                        }
+
+                        Button {
+                            text: "背景左转"
+                            implicitHeight: 32
+                            onClicked: popupModuleArea.leftTransparent()
+
+                            background: Rectangle {
+                                color: parent.hovered ? "#138496" : "#17a2b8"
+                                radius: 4
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                font.pixelSize: 12
+                            }
+                        }
+
+                        Button {
+                            text: "背景右转"
+                            implicitHeight: 32
+                            onClicked: popupModuleArea.rightTransparent()
+
+                            background: Rectangle {
+                                color: parent.hovered ? "#138496" : "#17a2b8"
+                                radius: 4
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                font.pixelSize: 12
+                            }
+                        }
+
+                        Button {
+                            text: "关闭"
+                            implicitHeight: 32
+                            onClicked: moduleDetailPopup.close()
+
+                            background: Rectangle {
+                                color: parent.hovered ? "#c82333" : "#dc3545"
+                                radius: 4
+                            }
+
+                            contentItem: Text {
+                                text: parent.text
+                                color: "white"
+                                horizontalAlignment: Text.AlignHCenter
+                                verticalAlignment: Text.AlignVCenter
+                                font.pixelSize: 12
+                            }
+                        }
+                    }
+                }
+
+                // 主要内容区域
+                RowLayout {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    spacing: 10
+
+                    // 模块区域
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 2
+                        color: "#ffffff"
+                        border.color: "#dee2e6"
+                        border.width: 1
+                        radius: 6
+
+                        ColumnLayout {
+                            anchors.fill: parent
+                            anchors.margins: 10
+                            spacing: 8
+
+                            RowLayout {
+                                Layout.fillWidth: true
+
+                                Text {
+                                    text: "模块视图"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#495057"
+                                }
+
+                                Item {
+                                    Layout.fillWidth: true
+                                }
+
+                                Text {
+                                    text: moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.meta || "未命名模块" : ""
+                                    font.pixelSize: 12
+                                    color: "#6c757d"
+                                }
+                            }
+
+                            ModuleArea {
+                                id: popupModuleArea
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                points: moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.points : []
+                                backgroundSource: moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.base64 || "" : ""
+                                isEditing: true
+
+                                // onPointSelected: function (index) {
+                                //     console.log("模块区域选中点位:", index);
+                                //     popupPointsArea.currentPointIndex = index;
+                                // }
+
+                                // onPointDeleted: function (index) {
+                                //     console.log("删除点位:", index);
+                                //     if (moduleDetailPopup.currentModule && typeof moduleDetailPopup.currentModule.deletePoint === "function") {
+                                //         moduleDetailPopup.currentModule.deletePoint(index);
+                                //     }
+                                // }
+
+                                // onPointAdded: function (x, y) {
+                                //     console.log("添加点位:", x, y);
+                                //     if (moduleDetailPopup.currentModule && typeof moduleDetailPopup.currentModule.addPoint === "function") {
+                                //         moduleDetailPopup.currentModule.addPoint(x, y, "点位" + (moduleDetailPopup.currentModule.points.count + 1));
+                                //     }
+                                // }
+
+                                // onPointMoved: function (index, x, y) {
+                                //     console.log("移动点位:", index, x, y);
+                                //     if (moduleDetailPopup.currentModule && typeof moduleDetailPopup.currentModule.movePoint === "function") {
+                                //         moduleDetailPopup.currentModule.movePoint(index, x, y);
+                                //     }
+                                // }
+                            }
+                        }
+                    }
+
+                    // 右侧信息和点位区域
+                    ColumnLayout {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 1
+                        spacing: 10
+
+                        // 模块信息编辑区域
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.preferredHeight: 280
+                            color: "#ffffff"
+                            border.color: "#dee2e6"
+                            border.width: 1
+                            radius: 6
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                spacing: 8
+
+                                Text {
+                                    text: "模块详情"
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#495057"
+                                }
+
+                                ScrollView {
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    clip: true
+
+                                    ColumnLayout {
+                                        width: parent.width
+                                        spacing: 8
+
+                                        // 模块型号
+                                        RowLayout {
+                                            Layout.fillWidth: true
+                                            spacing: 8
+
+                                            Text {
+                                                text: "模块型号:"
+                                                font.pixelSize: 12
+                                                color: "#495057"
+                                                font.bold: true
+                                                Layout.preferredWidth: 70
+                                            }
+
+                                            TextField {
+                                                id: metaTextField
+                                                Layout.fillWidth: true
+                                                text: ""
+                                                placeholderText: "请输入模块型号"
+                                                font.pixelSize: 11
+                                                onTextChanged: {
+                                                    if (moduleDetailPopup.banSave || !moduleDetailPopup.currentModule)
+                                                        return;
+                                                    moduleDetailPopup.currentModule.meta = text;
+                                                    if (typeof moduleDetailPopup.currentModule.dataChanged === "function") {
+                                                        moduleDetailPopup.currentModule.dataChanged();
+                                                    }
+                                                }
+
+                                                background: Rectangle {
+                                                    color: "#ffffff"
+                                                    border.color: parent.focus ? "#007bff" : "#ced4da"
+                                                    border.width: 1
+                                                    radius: 3
+                                                }
+                                            }
+                                        }
+
+                                        // 引脚数量
+                                        RowLayout {
+                                            Layout.fillWidth: true
+                                            spacing: 8
+
+                                            Text {
+                                                text: "引脚数量:"
+                                                font.pixelSize: 12
+                                                color: "#495057"
+                                                font.bold: true
+                                                Layout.preferredWidth: 70
+                                            }
+
+                                            SpinBox {
+                                                id: ioNumSpinBox
+                                                Layout.preferredWidth: 100
+                                                value: 0
+                                                from: 0
+                                                to: 99
+                                                editable: true
+                                                onValueChanged: {
+                                                    if (moduleDetailPopup.banSave || !moduleDetailPopup.currentModule)
+                                                        return;
+                                                    moduleDetailPopup.currentModule.ioNum = value;
+                                                    if (typeof moduleDetailPopup.currentModule.dataChanged === "function") {
+                                                        moduleDetailPopup.currentModule.dataChanged();
+                                                    }
+                                                }
+
+                                                background: Rectangle {
+                                                    implicitHeight: 28
+                                                    color: "#ffffff"
+                                                    border.color: parent.focus ? "#007bff" : "#ced4da"
+                                                    border.width: 1
+                                                    radius: 3
+                                                }
+
+                                                contentItem: TextInput {
+                                                    text: parent.textFromValue(parent.value, parent.locale)
+                                                    color: "#212529"
+                                                    selectByMouse: true
+                                                    horizontalAlignment: Qt.AlignHCenter
+                                                    verticalAlignment: Qt.AlignVCenter
+                                                    font.pixelSize: 11
+                                                }
+                                            }
+
+                                            Text {
+                                                text: "实际: " + (moduleDetailPopup.currentModule && moduleDetailPopup.currentModule.points ? moduleDetailPopup.currentModule.points.count : 0)
+                                                color: "#6c757d"
+                                                font.pixelSize: 10
+                                                Layout.fillWidth: true
+                                            }
+
+                                            Button {
+                                                text: "删除尾点"
+                                                implicitHeight: 28
+                                                implicitWidth: 70
+                                                onClicked: {
+                                                    if (moduleDetailPopup.currentModule && typeof moduleDetailPopup.currentModule.deletePoint === "function") {
+                                                        moduleDetailPopup.currentModule.deletePoint();
+                                                    }
+                                                }
+
+                                                background: Rectangle {
+                                                    color: parent.hovered ? "#c82333" : "#dc3545"
+                                                    radius: 3
+                                                }
+
+                                                contentItem: Text {
+                                                    text: parent.text
+                                                    color: "white"
+                                                    horizontalAlignment: Text.AlignHCenter
+                                                    verticalAlignment: Text.AlignVCenter
+                                                    font.pixelSize: 10
+                                                    font.bold: true
+                                                }
+                                            }
+                                        }
+
+                                        // 锁片对数
+                                        RowLayout {
+                                            Layout.fillWidth: true
+                                            spacing: 8
+
+                                            Text {
+                                                text: "锁片对数:"
+                                                font.pixelSize: 12
+                                                color: "#495057"
+                                                font.bold: true
+                                                Layout.preferredWidth: 70
+                                            }
+
+                                            RowLayout {
+                                                Layout.fillWidth: true
+                                                spacing: 4
+
+                                                Repeater {
+                                                    model: 7
+
+                                                    delegate: Rectangle {
+                                                        width: 24
+                                                        height: 24
+                                                        color: index === (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum : 0) ? "#007bff" : "#f8f9fa"
+                                                        border.color: index === (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum : 0) ? "#0056b3" : "#dee2e6"
+                                                        border.width: 1
+                                                        radius: 3
+
+                                                        Text {
+                                                            anchors.centerIn: parent
+                                                            text: index
+                                                            font.pixelSize: 10
+                                                            font.bold: true
+                                                            color: index === (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum : 0) ? "white" : "#495057"
+                                                        }
+
+                                                        MouseArea {
+                                                            anchors.fill: parent
+                                                            onClicked: {
+                                                                if (moduleDetailPopup.currentModule) {
+                                                                    moduleDetailPopup.currentModule.lockNum = index;
+                                                                    if (typeof moduleDetailPopup.currentModule.dataChanged === "function") {
+                                                                        moduleDetailPopup.currentModule.dataChanged();
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+
+                                        // 气密存在
+                                        RowLayout {
+                                            Layout.fillWidth: true
+                                            spacing: 8
+
+                                            Text {
+                                                text: "气密存在:"
+                                                font.pixelSize: 12
+                                                color: "#495057"
+                                                font.bold: true
+                                                Layout.preferredWidth: 70
+                                            }
+
+                                            CheckBox {
+                                                id: airCheckBox
+                                                checked: false
+                                                text: "存在气密"
+                                                font.pixelSize: 11
+                                                onCheckedChanged: {
+                                                    if (moduleDetailPopup.banSave || !moduleDetailPopup.currentModule)
+                                                        return;
+                                                    moduleDetailPopup.currentModule.airNum = checked ? 1 : 0;
+                                                    if (typeof moduleDetailPopup.currentModule.dataChanged === "function") {
+                                                        moduleDetailPopup.currentModule.dataChanged();
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        // 点位列表区域
+                        Rectangle {
+                            Layout.fillWidth: true
+                            Layout.fillHeight: true
+                            color: "#ffffff"
+                            border.color: "#dee2e6"
+                            border.width: 1
+                            radius: 6
+
+                            ColumnLayout {
+                                anchors.fill: parent
+                                anchors.margins: 10
+                                spacing: 8
+
+                                RowLayout {
+                                    Layout.fillWidth: true
+
+                                    Text {
+                                        text: "点位列表"
+                                        font.pixelSize: 14
+                                        font.bold: true
+                                        color: "#495057"
+                                    }
+
+                                    Item {
+                                        Layout.fillWidth: true
+                                    }
+
+                                    Text {
+                                        text: "共 " + (moduleDetailPopup.currentModule && moduleDetailPopup.currentModule.points ? moduleDetailPopup.currentModule.points.count : 0) + " 个"
+                                        font.pixelSize: 12
+                                        color: "#6c757d"
+                                    }
+                                }
+
+                                PointsArea {
+                                    id: popupPointsArea
+                                    Layout.fillWidth: true
+                                    Layout.fillHeight: true
+                                    points: moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.points : []
+                                    isEditing: true
+
+                                    // onPointSelected: function (index) {
+                                    //     console.log("点位列表选中点位:", index);
+                                    //     popupModuleArea.currentPointIndex = index;
+                                    // }
+
+                                    // onPointDeleted: function (index) {
+                                    //     console.log("从列表删除点位:", index);
+                                    //     if (moduleDetailPopup.currentModule && typeof moduleDetailPopup.currentModule.deletePoint === "function") {
+                                    //         moduleDetailPopup.currentModule.deletePoint(index);
+                                    //     } else {
+                                    //         if (moduleDetailPopup.currentModule && Array.isArray(moduleDetailPopup.currentModule.points))
+                                    //             moduleDetailPopup.currentModule.points.splice(index, 1);
+                                    //     }
+                                    // }
+
+                                    // onPointMoved: function (fromIndex, toIndex) {
+                                    //     console.log("点位拖拽移动:", fromIndex, "->", toIndex);
+                                    //     if (moduleDetailPopup.currentModule && typeof moduleDetailPopup.currentModule.movePointInList === "function") {
+                                    //         moduleDetailPopup.currentModule.movePointInList(fromIndex, toIndex);
+                                    //     } else {
+                                    //         // 兼容处理：手动移动数组元素
+                                    //         if (moduleDetailPopup.currentModule && Array.isArray(moduleDetailPopup.currentModule.points) && fromIndex !== toIndex) {
+                                    //             var points = moduleDetailPopup.currentModule.points;
+                                    //             var item = points.splice(fromIndex, 1)[0];
+                                    //             points.splice(toIndex, 0, item);
+                                    //             // 触发数据更新
+                                    //             if (typeof moduleDetailPopup.currentModule.dataChanged === "function") {
+                                    //                 moduleDetailPopup.currentModule.dataChanged();
+                                    //             }
+                                    //         }
+                                    //     }
+                                    // }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // 状态栏
+                Rectangle {
+                    Layout.fillWidth: true
+                    height: 30
+                    color: "#e9ecef"
+                    radius: 4
+
+                    RowLayout {
+                        anchors.fill: parent
+                        anchors.margins: 8
+                        spacing: 15
+
+                        Text {
+                            text: "模块: " + (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.code || "未知" : "")
+                            font.pixelSize: 11
+                            color: "#495057"
+                        }
+
+                        Text {
+                            text: "点位: " + (moduleDetailPopup.currentModule && moduleDetailPopup.currentModule.points ? moduleDetailPopup.currentModule.points.count : 0)
+                            font.pixelSize: 11
+                            color: "#495057"
+                        }
+
+                        Text {
+                            text: "引脚: " + (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.ioNum || 0 : 0)
+                            font.pixelSize: 11
+                            color: "#495057"
+                        }
+
+                        Text {
+                            text: "锁片: " + (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum || 0 : 0)
+                            font.pixelSize: 11
+                            color: "#495057"
+                        }
+
+                        Item {
+                            Layout.fillWidth: true
+                        }
+
+                        Text {
+                            text: "编辑模式"
+                            font.pixelSize: 11
+                            color: "#28a745"
+                            font.bold: true
+                        }
+                    }
+                }
+            }
+        }
+
+        // 监听模块数据变化
+        Connections {
+            target: moduleDetailPopup.currentModule
+            function onDataChanged() {
+                moduleDetailPopup.updateFields();
+            }
+        }
     }
 }

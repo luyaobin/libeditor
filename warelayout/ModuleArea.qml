@@ -84,21 +84,6 @@ Rectangle {
                 }
             }
         }
-
-        // 尺寸标识
-        Text {
-            anchors.bottom: parent.bottom
-            anchors.right: parent.right
-            anchors.margins: 5
-            text: "800×800"
-            color: "#6c757d"
-            font.pixelSize: 10
-            background: Rectangle {
-                color: "#ffffff"
-                opacity: 0.8
-                radius: 2
-            }
-        }
     }
 
     // 点位显示
@@ -113,9 +98,6 @@ Rectangle {
             width: 10
             height: 10
             radius: 5
-            // color: "red"
-            // border.color: "black"
-            // border.width: 1
             x: model.rx ? model.rx - 5 : 0
             y: model.ry ? model.ry - 5 : 0
             z: 1

@@ -18,23 +18,35 @@ Page {
         spacing: 12
 
         // 左侧模块信息面板
-        Item {
+        ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredWidth: 1
 
-            ModuleInfo {
-                anchors.fill: parent
+            Libraries {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: 2
             }
+            ListError {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: 1
+            }
+            // ModuleInfo {
+            //     anchors.fill: parent
+            // }
         }
 
-        Item {
-
+        ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Layout.preferredWidth: 3
+
             ModuleLayout {
-                anchors.fill: parent
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: 2
             }
         }
     }
