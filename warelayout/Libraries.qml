@@ -702,8 +702,8 @@ Item {
     Popup {
         id: projectSelectionPopup
 
-        width: 500
-        height: 400
+        width: 600
+        height: 500
         anchors.centerIn: parent
         modal: true
         focus: true
@@ -808,6 +808,32 @@ Item {
                 }
             }
 
+            // 状态提示信息
+            Rectangle {
+                id: statusMessage
+                Layout.fillWidth: true
+                Layout.preferredHeight: 30
+                color: "#d4edda"
+                border.color: "#c3e6cb"
+                border.width: 1
+                radius: 4
+                visible: false
+
+                Text {
+                    id: statusText
+                    anchors.centerIn: parent
+                    font.pixelSize: 12
+                    color: "#155724"
+                    font.family: "Microsoft YaHei"
+                }
+
+                Timer {
+                    id: statusTimer
+                    interval: 3000
+                    onTriggered: statusMessage.visible = false
+                }
+            }
+
             // 项目列表
             ScrollView {
                 Layout.fillWidth: true
@@ -825,7 +851,7 @@ Item {
 
                     delegate: Rectangle {
                         width: projectListView.width
-                        height: 50
+                        height: 60
                         color: projectMouseArea.containsMouse ? "#f0f7ff" : "#ffffff"
                         border.color: "#e0e0e0"
                         border.width: 1
@@ -849,20 +875,76 @@ Item {
                                 }
                             }
 
-                            Text {
+                            ColumnLayout {
                                 Layout.fillWidth: true
-                                text: model.name || ""
-                                font.pixelSize: 14
-                                color: "#333333"
-                                font.family: "Microsoft YaHei"
-                                elide: Text.ElideRight
+                                spacing: 2
+
+                                Text {
+                                    Layout.fillWidth: true
+                                    text: model.displayName || model.name || ""
+                                    font.pixelSize: 14
+                                    font.bold: true
+                                    color: "#333333"
+                                    font.family: "Microsoft YaHei"
+                                    elide: Text.ElideRight
+                                }
+
+                                Text {
+                                    Layout.fillWidth: true
+                                    text: model.description || "无描述"
+                                    font.pixelSize: 11
+                                    color: "#888888"
+                                    font.family: "Microsoft YaHei"
+                                    elide: Text.ElideRight
+                                }
                             }
 
-                            Text {
+                            Button {
                                 text: "选择"
-                                font.pixelSize: 12
-                                color: "#4caf50"
-                                font.family: "Microsoft YaHei"
+                                Layout.preferredWidth: 60
+                                Layout.preferredHeight: 28
+
+                                onClicked: {
+                                    selectProject(model.name);
+                                }
+
+                                background: Rectangle {
+                                    color: parent.pressed ? "#218838" : "#28a745"
+                                    radius: 4
+                                }
+
+                                contentItem: Text {
+                                    text: parent.text
+                                    color: "white"
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    font.pixelSize: 10
+                                    font.family: "Microsoft YaHei"
+                                }
+                            }
+
+                            Button {
+                                text: "删除"
+                                Layout.preferredWidth: 60
+                                Layout.preferredHeight: 28
+
+                                onClicked: {
+                                    deleteProject(model.name);
+                                }
+
+                                background: Rectangle {
+                                    color: parent.pressed ? "#c82333" : "#dc3545"
+                                    radius: 4
+                                }
+
+                                contentItem: Text {
+                                    text: parent.text
+                                    color: "white"
+                                    horizontalAlignment: Text.AlignHCenter
+                                    verticalAlignment: Text.AlignVCenter
+                                    font.pixelSize: 10
+                                    font.family: "Microsoft YaHei"
+                                }
                             }
                         }
 
@@ -870,10 +952,6 @@ Item {
                             id: projectMouseArea
                             anchors.fill: parent
                             hoverEnabled: true
-
-                            onClicked: {
-                                selectProject(model.name);
-                            }
                         }
                     }
                 }
@@ -883,6 +961,30 @@ Item {
             RowLayout {
                 Layout.fillWidth: true
                 spacing: 10
+
+                Button {
+                    text: "新建项目"
+                    Layout.preferredWidth: 100
+                    Layout.preferredHeight: 36
+
+                    onClicked: {
+                        createProjectDialog.open();
+                    }
+
+                    background: Rectangle {
+                        color: parent.pressed ? "#218838" : "#28a745"
+                        radius: 6
+                    }
+
+                    contentItem: Text {
+                        text: parent.text
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: 12
+                        font.family: "Microsoft YaHei"
+                    }
+                }
 
                 Button {
                     text: "刷新列表"
@@ -946,6 +1048,309 @@ Item {
         }
     }
 
+    // 新建项目对话框
+    Popup {
+        id: createProjectDialog
+
+        width: 400
+        height: 300
+        anchors.centerIn: parent
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape
+
+        background: Rectangle {
+            color: "#ffffff"
+            radius: 10
+            border.color: "#e0e0e0"
+            border.width: 1
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 20
+            spacing: 15
+
+            // 标题栏
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+
+                Rectangle {
+                    width: 32
+                    height: 32
+                    radius: 16
+                    color: "#28a745"
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: "➕"
+                        font.pixelSize: 16
+                        color: "white"
+                    }
+                }
+
+                Text {
+                    text: "新建项目"
+                    font.pixelSize: 18
+                    font.bold: true
+                    color: "#333333"
+                    font.family: "Microsoft YaHei"
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+            }
+
+            // 项目名称输入
+            ColumnLayout {
+                Layout.fillWidth: true
+                spacing: 8
+
+                Text {
+                    text: "项目名称:"
+                    font.pixelSize: 14
+                    color: "#666666"
+                    font.family: "Microsoft YaHei"
+                }
+
+                TextField {
+                    id: projectNameField
+                    Layout.fillWidth: true
+                    placeholderText: "请输入项目名称"
+                    font.pixelSize: 14
+                    selectByMouse: true
+
+                    background: Rectangle {
+                        color: "#f8f9fa"
+                        border.color: parent.focus ? "#007bff" : "#dcdfe6"
+                        border.width: parent.focus ? 2 : 1
+                        radius: 6
+                    }
+                }
+
+                Text {
+                    text: "项目描述:"
+                    font.pixelSize: 14
+                    color: "#666666"
+                    font.family: "Microsoft YaHei"
+                }
+
+                ScrollView {
+                    Layout.fillWidth: true
+                    Layout.preferredHeight: 80
+                    clip: true
+
+                    TextArea {
+                        id: projectDescField
+                        placeholderText: "请输入项目描述（可选）"
+                        font.pixelSize: 12
+                        selectByMouse: true
+                        wrapMode: TextArea.Wrap
+
+                        background: Rectangle {
+                            color: "#f8f9fa"
+                            border.color: parent.focus ? "#007bff" : "#dcdfe6"
+                            border.width: parent.focus ? 2 : 1
+                            radius: 6
+                        }
+                    }
+                }
+            }
+
+            // 底部按钮
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                Button {
+                    text: "取消"
+                    Layout.preferredWidth: 80
+                    Layout.preferredHeight: 36
+
+                    onClicked: {
+                        createProjectDialog.close();
+                        clearCreateDialog();
+                    }
+
+                    background: Rectangle {
+                        color: parent.pressed ? "#d0d0d0" : "#f0f0f0"
+                        radius: 6
+                        border.color: "#cccccc"
+                        border.width: 1
+                    }
+
+                    contentItem: Text {
+                        text: parent.text
+                        color: "#666666"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: 12
+                        font.family: "Microsoft YaHei"
+                    }
+                }
+
+                Button {
+                    text: "创建"
+                    Layout.preferredWidth: 80
+                    Layout.preferredHeight: 36
+
+                    onClicked: {
+                        createProject();
+                    }
+
+                    background: Rectangle {
+                        color: parent.pressed ? "#218838" : "#28a745"
+                        radius: 6
+                    }
+
+                    contentItem: Text {
+                        text: parent.text
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: 12
+                        font.family: "Microsoft YaHei"
+                    }
+                }
+            }
+        }
+    }
+
+    // 删除项目确认对话框
+    Popup {
+        id: deleteProjectDialog
+
+        width: 350
+        height: 200
+        anchors.centerIn: parent
+        modal: true
+        focus: true
+        closePolicy: Popup.CloseOnEscape
+
+        property string projectToDelete: ""
+
+        background: Rectangle {
+            color: "#ffffff"
+            radius: 10
+            border.color: "#e0e0e0"
+            border.width: 1
+        }
+
+        ColumnLayout {
+            anchors.fill: parent
+            anchors.margins: 20
+            spacing: 15
+
+            // 标题栏
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+
+                Rectangle {
+                    width: 32
+                    height: 32
+                    radius: 16
+                    color: "#dc3545"
+
+                    Text {
+                        anchors.centerIn: parent
+                        text: "⚠️"
+                        font.pixelSize: 16
+                    }
+                }
+
+                Text {
+                    text: "删除项目"
+                    font.pixelSize: 18
+                    font.bold: true
+                    color: "#333333"
+                    font.family: "Microsoft YaHei"
+                }
+
+                Item {
+                    Layout.fillWidth: true
+                }
+            }
+
+            // 确认信息
+            Text {
+                Layout.fillWidth: true
+                text: "确定要删除项目 \"" + deleteProjectDialog.projectToDelete + "\" 吗？\n\n此操作不可撤销！"
+                font.pixelSize: 14
+                color: "#666666"
+                font.family: "Microsoft YaHei"
+                wrapMode: Text.WordWrap
+                horizontalAlignment: Text.AlignHCenter
+            }
+
+            // 底部按钮
+            RowLayout {
+                Layout.fillWidth: true
+                spacing: 10
+
+                Item {
+                    Layout.fillWidth: true
+                }
+
+                Button {
+                    text: "取消"
+                    Layout.preferredWidth: 80
+                    Layout.preferredHeight: 36
+
+                    onClicked: {
+                        deleteProjectDialog.close();
+                    }
+
+                    background: Rectangle {
+                        color: parent.pressed ? "#d0d0d0" : "#f0f0f0"
+                        radius: 6
+                        border.color: "#cccccc"
+                        border.width: 1
+                    }
+
+                    contentItem: Text {
+                        text: parent.text
+                        color: "#666666"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: 12
+                        font.family: "Microsoft YaHei"
+                    }
+                }
+
+                Button {
+                    text: "确认删除"
+                    Layout.preferredWidth: 100
+                    Layout.preferredHeight: 36
+
+                    onClicked: {
+                        confirmDeleteProject();
+                    }
+
+                    background: Rectangle {
+                        color: parent.pressed ? "#c82333" : "#dc3545"
+                        radius: 6
+                    }
+
+                    contentItem: Text {
+                        text: parent.text
+                        color: "white"
+                        horizontalAlignment: Text.AlignHCenter
+                        verticalAlignment: Text.AlignVCenter
+                        font.pixelSize: 12
+                        font.family: "Microsoft YaHei"
+                    }
+                }
+            }
+        }
+    }
+
     // 加载项目列表的函数
     function loadProjectList() {
         projectListModel.clear();
@@ -964,9 +1369,8 @@ Item {
                     if (fileName !== "." && fileName !== ".." && !fileName.startsWith(".")) {
                         // 过滤项目文件（可以根据需要调整过滤条件）
                         if (fileName.endsWith(".json") || fileName.endsWith(".txt") || fileName.endsWith(".ini")) {
-                            projectListModel.append({
-                                "name": fileName
-                            });
+                            var projectInfo = getProjectInfo(fileName);
+                            projectListModel.append(projectInfo);
                             console.log("添加项目文件:", fileName);
                         }
                     }
@@ -1005,5 +1409,177 @@ Item {
         }
 
         projectSelectionPopup.close();
+    }
+
+    // 创建项目的函数
+    function createProject() {
+        var projectName = projectNameField.text.trim();
+        var description = projectDescField.text.trim();
+
+        if (!projectName) {
+            console.error("项目名称不能为空");
+            showStatusMessage("项目名称不能为空", "error");
+            return;
+        }
+
+        // 确保文件扩展名
+        if (!projectName.endsWith(".json")) {
+            projectName += ".json";
+        }
+
+        // 检查项目是否已存在
+        var projectPath = "projects/" + projectName;
+        if (typeof qmlFileOpt !== "undefined" && qmlFileOpt.isExist(projectPath)) {
+            console.error("项目已存在:", projectName);
+            showStatusMessage("项目已存在: " + projectName, "error");
+            return;
+        }
+
+        // 创建项目数据结构
+        var projectData = {
+            "projectName": projectName.replace(".json", ""),
+            "description": description,
+            "version": "1.0.0",
+            "createTime": qmlFileOpt ? qmlFileOpt.currentDataTime("yyyy-MM-dd hh:mm:ss") : new Date().toISOString(),
+            "updateTime": qmlFileOpt ? qmlFileOpt.currentDataTime("yyyy-MM-dd hh:mm:ss") : new Date().toISOString(),
+            "modules": [],
+            "points": [],
+            "loops": [],
+            "config": {
+                "autoSave": true,
+                "backupEnabled": true,
+                "maxHistory": 50
+            }
+        };
+
+        try {
+            // 保存项目文件
+            var jsonContent = JSON.stringify(projectData, null, 2);
+            if (typeof qmlFileOpt !== "undefined" && qmlFileOpt.write(projectPath, jsonContent)) {
+                console.log("项目创建成功:", projectName);
+
+                // 关闭对话框并清空输入
+                createProjectDialog.close();
+                clearCreateDialog();
+
+                // 刷新项目列表
+                loadProjectList();
+
+                // 自动选择新创建的项目
+                selectProject(projectName);
+
+                // 显示成功消息
+                showStatusMessage("项目创建成功: " + projectName, "success");
+            } else {
+                console.error("保存项目文件失败");
+                showStatusMessage("保存项目文件失败", "error");
+            }
+        } catch (error) {
+            console.error("创建项目失败:", error);
+            showStatusMessage("创建项目失败: " + error.toString(), "error");
+        }
+    }
+
+    // 删除项目的函数
+    function deleteProject(projectName) {
+        deleteProjectDialog.projectToDelete = projectName;
+        deleteProjectDialog.open();
+    }
+
+    // 确认删除项目的函数
+    function confirmDeleteProject() {
+        var projectName = deleteProjectDialog.projectToDelete;
+        if (!projectName) {
+            return;
+        }
+
+        var projectPath = "projects/" + projectName;
+
+        try {
+            if (typeof qmlFileOpt !== "undefined" && qmlFileOpt.remove(projectPath)) {
+                console.log("项目删除成功:", projectName);
+
+                // 如果删除的是当前选中的项目，清空当前项目显示
+                if (currentProjectText.text === projectName) {
+                    currentProjectText.text = "未选择项目";
+                }
+
+                // 关闭对话框
+                deleteProjectDialog.close();
+
+                // 刷新项目列表
+                loadProjectList();
+
+                // 显示成功消息
+                showStatusMessage("项目删除成功: " + projectName, "success");
+            } else {
+                console.error("删除项目文件失败");
+                showStatusMessage("删除项目文件失败", "error");
+            }
+        } catch (error) {
+            console.error("删除项目失败:", error);
+            showStatusMessage("删除项目失败: " + error.toString(), "error");
+        }
+    }
+
+    // 清空创建项目对话框的函数
+    function clearCreateDialog() {
+        projectNameField.text = "";
+        projectDescField.text = "";
+    }
+
+    // 获取项目信息的函数
+    function getProjectInfo(fileName) {
+        var projectInfo = {
+            "name": fileName,
+            "displayName": fileName.replace(/\.(json|ini|txt)$/, ""),
+            "description": "无描述",
+            "version": "1.0.0",
+            "createTime": "",
+            "type": fileName.split('.').pop()
+        };
+
+        // 尝试读取项目文件获取详细信息
+        if (typeof qmlFileOpt !== "undefined") {
+            try {
+                var projectPath = "projects/" + fileName;
+                var content = qmlFileOpt.read(projectPath);
+
+                if (content && content.trim() !== "" && fileName.endsWith(".json")) {
+                    var data = JSON.parse(content);
+                    projectInfo.displayName = data.projectName || projectInfo.displayName;
+                    projectInfo.description = data.description || "无描述";
+                    projectInfo.version = data.version || "1.0.0";
+                    projectInfo.createTime = data.createTime || "";
+                }
+            } catch (error) {
+                console.warn("读取项目信息失败:", fileName, error);
+            }
+        }
+
+        return projectInfo;
+    }
+
+    // 显示状态消息的函数
+    function showStatusMessage(message, type) {
+        statusText.text = message;
+
+        // 根据类型设置颜色
+        if (type === "success") {
+            statusMessage.color = "#d4edda";
+            statusMessage.border.color = "#c3e6cb";
+            statusText.color = "#155724";
+        } else if (type === "error") {
+            statusMessage.color = "#f8d7da";
+            statusMessage.border.color = "#f5c6cb";
+            statusText.color = "#721c24";
+        } else {
+            statusMessage.color = "#d1ecf1";
+            statusMessage.border.color = "#bee5eb";
+            statusText.color = "#0c5460";
+        }
+
+        statusMessage.visible = true;
+        statusTimer.restart();
     }
 }
