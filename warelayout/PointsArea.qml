@@ -41,23 +41,19 @@ Rectangle {
                 Text {
                     Layout.fillWidth: true
                     Layout.preferredWidth: 100
-                    text: "点位:" + (index + 1) // (moduleData.tags.count > index ? moduleData.tags.get(index).tag : (index + 1) + "(默认)")
+                    text: "点位" + (index + 1) // (moduleData.tags.count > index ? moduleData.tags.get(index).tag : (index + 1) + "(默认)")
                 }
 
                 Text {
                     Layout.preferredWidth: 100
-                    text: "X: " + (model.rx || 0) + ", Y: " + (model.ry || 0)
-                    font.pixelSize: 12
-                    color: "#666666"
+                    text: strValue
                 }
-            }
 
-            MouseArea {
-                anchors.fill: parent
-                anchors.rightMargin: pointsArea.isEditing ? 70 : 0 // 避免与删除按钮冲突
-                onClicked: {
-                    pointsListView.currentIndex = index;
-                    pointsArea.pointSelected(index);
+                TextField {
+                    Layout.fillWidth: true
+                    Layout.preferredWidth: 100
+                    placeholderText: "回路名称"
+                    text: loopName
                 }
             }
         }

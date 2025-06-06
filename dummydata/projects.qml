@@ -90,7 +90,7 @@ Rectangle {
             "modules": [],
             "layoutConfig": {
                 "width": 1200,
-                "height": 800,
+                "height": 600,
                 "scale": 1.0,
                 "offsetX": 0,
                 "offsetY": 0
@@ -163,7 +163,7 @@ Rectangle {
                 "modules": projectData.modules || [],
                 "layoutConfig": projectData.layoutConfig || {
                     "width": 1200,
-                    "height": 800,
+                    "height": 600,
                     "scale": 1.0,
                     "offsetX": 0,
                     "offsetY": 0

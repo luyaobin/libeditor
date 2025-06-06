@@ -317,6 +317,7 @@ Item {
                     }
                 }
 
+                // 点位调整区域
                 ColumnLayout {
                     Layout.fillWidth: true
                     spacing: 8
@@ -342,8 +343,7 @@ Item {
 
                             onClicked: {
                                 startPointModel.append({
-                                    "index": startPointModel.count // 内部索引从0开始
-                                    ,
+                                    "index": startPointModel.count,
                                     "seek": ""
                                 });
                             }
@@ -371,7 +371,6 @@ Item {
                             enabled: startPointModel.count > 1
 
                             onClicked: {
-                                // 删除最后一项
                                 if (startPointModel.count > 1) {
                                     startPointModel.remove(startPointModel.count - 1);
                                     updateStartPointData();
@@ -442,7 +441,7 @@ Item {
                                         var displayIndex = parseInt(text) || 1;
                                         if (displayIndex < 1)
                                             displayIndex = 1;
-                                        var actualIndex = displayIndex - 1; // 转换为内部索引（从0开始）
+                                        var actualIndex = displayIndex - 1;
                                         startPointModel.setProperty(index, "index", actualIndex);
                                         updateStartPointData();
                                     }
@@ -459,7 +458,7 @@ Item {
                                     id: seekField
                                     Layout.fillWidth: true
                                     Layout.preferredHeight: 32
-                                    text: model.seek
+                                    text: model.seek || ""
                                     placeholderText: "硬件编号(1-1-1)"
                                     font.pixelSize: 12
                                     font.family: "Microsoft YaHei"
@@ -508,5 +507,17 @@ Item {
         }
 
         console.log("起点数据更新:", JSON.stringify(startPoints));
+    }
+
+    // 生成起点值字符串的函数
+    function getStartPointsString() {
+        var result = [];
+        for (var i = 0; i < startPointModel.count; i++) {
+            var item = startPointModel.get(i);
+            if (item.seek && item.seek.trim() !== "") {
+                result.push(item.seek);
+            }
+        }
+        return result.join(", ");
     }
 }

@@ -49,11 +49,11 @@ Rectangle {
         id: qmlSystem
     }
 
-    // 背景图片容器 - 固定800x800尺寸
+    // 背景图片容器 - 固定600x600尺寸
     Rectangle {
         anchors.centerIn: parent
-        width: 800
-        height: 800
+        width: 600
+        height: 600
         color: "transparent"
         border.color: "#dee2e6"
         border.width: backgroundImage.source != "" ? 1 : 0
@@ -64,13 +64,13 @@ Rectangle {
             id: backgroundImage
             anchors.centerIn: parent
             fillMode: Image.PreserveAspectFit
-            width: Math.min(800, implicitWidth)
-            height: Math.min(800, implicitHeight)
+            width: Math.min(600, implicitWidth)
+            height: Math.min(600, implicitHeight)
 
-            // 确保图片不会超出800x800的范围
+            // 确保图片不会超出600x600的范围
             onImplicitWidthChanged: {
                 if (implicitWidth > 0 && implicitHeight > 0) {
-                    var scale = Math.min(800 / implicitWidth, 800 / implicitHeight);
+                    var scale = Math.min(600 / implicitWidth, 600 / implicitHeight);
                     width = implicitWidth * scale;
                     height = implicitHeight * scale;
                 }
@@ -78,7 +78,7 @@ Rectangle {
 
             onImplicitHeightChanged: {
                 if (implicitWidth > 0 && implicitHeight > 0) {
-                    var scale = Math.min(800 / implicitWidth, 800 / implicitHeight);
+                    var scale = Math.min(600 / implicitWidth, 600 / implicitHeight);
                     width = implicitWidth * scale;
                     height = implicitHeight * scale;
                 }

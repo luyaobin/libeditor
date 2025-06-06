@@ -444,77 +444,26 @@ Item {
                 anchors.margins: 16
                 spacing: 12
 
-                // 工具栏
-                Rectangle {
-                    Layout.fillWidth: true
-                    height: 60
-                    color: "#f8f9fa"
-                    border.color: "#e0e0e0"
-                    border.width: 1
-                    radius: 8
-
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.margins: 16
-                        spacing: 16
-
-                        // 模块图标
-                        Rectangle {
-                            width: 32
-                            height: 32
-                            radius: 16
-                            color: "#409eff"
-
-                            Text {
-                                anchors.centerIn: parent
-                                text: "📦"
-                                font.pixelSize: 16
-                                color: "white"
-                            }
-                        }
-
-                        Text {
-                            text: "模块详情 - " + (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.meta || "未命名模块" : "")
-                            font.pixelSize: 16
-                            font.bold: true
-                            color: "#333333"
-                            font.family: "Microsoft YaHei"
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        Button {
-                            text: "关闭"
-                            implicitHeight: 36
-                            implicitWidth: 80
-                            onClicked: moduleDetailPopup.close()
-
-                            background: Rectangle {
-                                color: parent.hovered ? "#f56c6c" : "#fa8c8c"
-                                radius: 6
-                            }
-
-                            contentItem: Text {
-                                text: parent.text
-                                color: "white"
-                                horizontalAlignment: Text.AlignHCenter
-                                verticalAlignment: Text.AlignVCenter
-                                font.pixelSize: 14
-                                font.family: "Microsoft YaHei"
-                                font.bold: true
-                            }
-                        }
-                    }
-                }
-
                 // 主要内容区域
                 RowLayout {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     spacing: 16
 
+                    // 模块信息编辑区域
+                    Rectangle {
+
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        Layout.preferredWidth: 1
+                        color: "#ffffff"
+                        border.color: "#e0e0e0"
+                        border.width: 1
+                        radius: 8
+                        ModuleDetails {
+                            anchors.fill: parent
+                        }
+                    }
                     // 模块区域
                     Rectangle {
                         Layout.fillWidth: true
@@ -587,20 +536,6 @@ Item {
                         }
                     }
 
-                    // 模块信息编辑区域
-                    Rectangle {
-
-                        Layout.fillWidth: true
-                        Layout.fillHeight: true
-                        Layout.preferredWidth: 1
-                        color: "#ffffff"
-                        border.color: "#e0e0e0"
-                        border.width: 1
-                        radius: 8
-                        ModuleDetails {
-                            anchors.fill: parent
-                        }
-                    }
                     // 点位列表区域
                     Rectangle {
                         Layout.fillWidth: true
@@ -671,87 +606,7 @@ Item {
                         }
                     }
                 }
-
-                // 状态栏
-                Rectangle {
-                    Layout.fillWidth: true
-                    height: 40
-                    color: "#f8f9fa"
-                    border.color: "#e0e0e0"
-                    border.width: 1
-                    radius: 6
-
-                    RowLayout {
-                        anchors.fill: parent
-                        anchors.margins: 12
-                        spacing: 20
-
-                        Rectangle {
-                            width: 16
-                            height: 16
-                            radius: 8
-                            color: "#4caf50"
-                        }
-
-                        Text {
-                            text: "模块: " + (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.code || "未知" : "")
-                            font.pixelSize: 12
-                            color: "#333333"
-                            font.family: "Microsoft YaHei"
-                        }
-
-                        Text {
-                            text: "点位: " + (moduleDetailPopup.currentModule && moduleDetailPopup.currentModule.points ? moduleDetailPopup.currentModule.points.count : 0)
-                            font.pixelSize: 12
-                            color: "#333333"
-                            font.family: "Microsoft YaHei"
-                        }
-
-                        Text {
-                            text: "引脚: " + (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.ioNum || 0 : 0)
-                            font.pixelSize: 12
-                            color: "#333333"
-                            font.family: "Microsoft YaHei"
-                        }
-
-                        Text {
-                            text: "锁片: " + (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum || 0 : 0)
-                            font.pixelSize: 12
-                            color: "#333333"
-                            font.family: "Microsoft YaHei"
-                        }
-
-                        Item {
-                            Layout.fillWidth: true
-                        }
-
-                        Rectangle {
-                            height: 20
-                            width: editModeText.width + 12
-                            color: "#e8f5e8"
-                            radius: 10
-
-                            Text {
-                                id: editModeText
-                                anchors.centerIn: parent
-                                text: "编辑模式"
-                                font.pixelSize: 11
-                                color: "#4caf50"
-                                font.bold: true
-                                font.family: "Microsoft YaHei"
-                            }
-                        }
-                    }
-                }
             }
         }
-
-        // 监听模块数据变化
-        // Connections {
-        //     target: moduleDetailPopup.currentModule
-        //     function onDataChanged() {
-        //         moduleDetailPopup.updateFields();
-        //     }
-        // }
     }
 }
