@@ -23,7 +23,7 @@ QmlFileOpt::QmlFileOpt(QObject *parent)
 {
 }
 
-QmlFileOpt::~QmlFileOpt()
+QmlFileOpt::~QmlFileOpt() image.png
 {
 }
 

@@ -10,33 +10,6 @@ ColumnLayout {
 
     property bool banSave: true
 
-    // 工具栏
-    Rectangle {
-        Layout.fillWidth: true
-        height: 50
-        color: "#f8f9fa"
-        border.color: "#dee2e6"
-        border.width: 1
-        radius: 6
-
-        RowLayout {
-            anchors.fill: parent
-            anchors.margins: 10
-            spacing: 10
-
-            Text {
-                text: "模块操作"
-                font.pixelSize: 14
-                font.bold: true
-                color: "#495057"
-            }
-
-            Item {
-                Layout.fillWidth: true
-            }
-        }
-    }
-
     // 主要内容区域
     RowLayout {
         Layout.fillWidth: true

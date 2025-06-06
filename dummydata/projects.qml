@@ -6,6 +6,7 @@ Rectangle {
     id: projectsRoot
 
     property alias projectModel: projectModel
+    property alias currentProjectModules: currentProjectModules
     property var projectUuids: []
     property string currentProjectId: ""
 
@@ -209,6 +210,114 @@ Rectangle {
         console.log("切换到项目:", uuid);
     }
 
+    // 添加模块到当前项目
+    function addModuleToProject(moduleData) {
+        const currentProject = getCurrentProject();
+        if (!currentProject) {
+            console.log("没有当前项目，无法添加模块");
+            return false;
+        }
+
+        // 创建模块副本，避免引用问题
+        const moduleToAdd = {
+            "uuid": moduleData.uuid,
+            "name": moduleData.name,
+            "code": moduleData.code,
+            "meta": moduleData.meta,
+            "ioNum": moduleData.ioNum,
+            "lockNum": moduleData.lockNum,
+            "airNum": moduleData.airNum,
+            "base64": moduleData.base64,
+            "points": JSON.parse(JSON.stringify(moduleData.points || [])),
+            "checks": JSON.parse(JSON.stringify(moduleData.checks || [])),
+            "airChecks": JSON.parse(JSON.stringify(moduleData.airChecks || [])),
+            "tags": JSON.parse(JSON.stringify(moduleData.tags || [])),
+            "position": {
+                "x": 100,
+                "y": 100
+            },
+            "addedTime": new Date().toISOString()
+        };
+
+        // 检查模块是否已存在
+        const existingModules = currentProject.modules || [];
+        const moduleExists = existingModules.some(function (module) {
+            return module.uuid === moduleData.uuid;
+        });
+
+        if (moduleExists) {
+            console.log("模块已存在于项目中:", moduleData.name);
+            return false;
+        }
+
+        // 添加模块到项目
+        const updatedModules = existingModules.slice();
+        updatedModules.push(moduleToAdd);
+
+        // 更新项目数据
+        let projectIndex = -1;
+        for (let i = 0; i < projectModel.count; i++) {
+            if (projectModel.get(i).uuid === currentProjectId) {
+                projectIndex = i;
+                break;
+            }
+        }
+
+        if (projectIndex >= 0) {
+            const updatedProject = JSON.parse(JSON.stringify(currentProject));
+            updatedProject.modules = updatedModules;
+            updatedProject.updateTime = new Date().toISOString();
+
+            updateProject(projectIndex, updatedProject);
+            updateCurrentProjectModules();
+            console.log("模块添加成功:", moduleData.name, "到项目:", currentProject.name);
+            return true;
+        }
+
+        return false;
+    }
+
+    // 从项目中移除模块
+    function removeModuleFromProject(moduleUuid) {
+        const currentProject = getCurrentProject();
+        if (!currentProject) {
+            console.log("没有当前项目，无法移除模块");
+            return false;
+        }
+
+        const existingModules = currentProject.modules || [];
+        const updatedModules = existingModules.filter(function (module) {
+            return module.uuid !== moduleUuid;
+        });
+
+        if (updatedModules.length === existingModules.length) {
+            console.log("模块不存在于项目中:", moduleUuid);
+            return false;
+        }
+
+        // 更新项目数据
+        let projectIndex = -1;
+        for (let i = 0; i < projectModel.count; i++) {
+            if (projectModel.get(i).uuid === currentProjectId) {
+                projectIndex = i;
+                break;
+            }
+        }
+
+        if (projectIndex >= 0) {
+            const updatedProject = JSON.parse(JSON.stringify(currentProject));
+            updatedProject.modules = updatedModules;
+            updatedProject.updateTime = new Date().toISOString();
+
+            updateProject(projectIndex, updatedProject);
+            updateCurrentProjectModules();
+            console.log("模块移除成功:", moduleUuid);
+            return true;
+        }
+
+        return false;
+    }
+
     // 复制项目
     function duplicateProject(index) {
         if (index >= 0 && index < projectModel.count) {
@@ -298,6 +407,7 @@ Rectangle {
     // 组件完成时加载数据
     Component.onCompleted: {
         loadProjectSettings();
+        updateCurrentProjectModules();
         console.log("projects onCompleted", projectModel.count);
     }
 
@@ -309,6 +419,45 @@ Rectangle {
     // 项目数据模型
     ListModel {
         id: projectModel
+    }
+
+    // 当前项目的模块模型
+    ListModel {
+        id: currentProjectModules
+    }
+
+    // 更新当前项目模块列表
+    function updateCurrentProjectModules() {
+        currentProjectModules.clear();
+        const currentProject = getCurrentProject();
+        if (currentProject && currentProject.modules) {
+            for (let i = 0; i < currentProject.modules.length; i++) {
+                const module = currentProject.modules[i];
+                currentProjectModules.append({
+                    "uuid": module.uuid,
+                    "name": module.name,
+                    "code": module.code,
+                    "meta": module.meta,
+                    "ioNum": module.ioNum,
+                    "lockNum": module.lockNum,
+                    "airNum": module.airNum,
+                    "base64": module.base64,
+                    "points": module.points,
+                    "checks": module.checks,
+                    "airChecks": module.airChecks,
+                    "tags": module.tags,
+                    "rx": module.position ? module.position.x : 100,
+                    "ry": module.position ? module.position.y : 100,
+                    "addedTime": module.addedTime
+                });
+            }
+        }
+        console.log("更新当前项目模块列表，模块数量:", currentProjectModules.count);
+    }
+
+    // 监听当前项目变化
+    onCurrentProjectIdChanged: {
+        updateCurrentProjectModules();
     }
 
     // 项目设置存储

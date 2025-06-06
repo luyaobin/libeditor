@@ -126,12 +126,10 @@ Item {
                     }
 
                     Button {
-                        // 显示提示信息
-
                         text: "仓库管理"
                         Layout.preferredWidth: 120
                         Layout.preferredHeight: 40
-                        onClicked: {}
+                        onClicked: warehousePopup.open()
 
                         background: Rectangle {
                             color: parent.pressed ? "#3a7ab3" : "#4a90e2"
@@ -150,7 +148,7 @@ Item {
                         text: "添加模块"
                         Layout.preferredWidth: 120
                         Layout.preferredHeight: 40
-                        onClicked: {}
+                        onClicked: moduleSelectionPopup.open()
 
                         background: Rectangle {
                             color: parent.pressed ? "#3a7ab3" : "#4a90e2"

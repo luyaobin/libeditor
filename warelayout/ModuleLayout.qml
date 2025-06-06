@@ -89,7 +89,7 @@ Item {
         Repeater {
             id: libraryListView
 
-            model: librariesModel.moduleModel
+            model: projects.currentProjectModules
 
             delegate: Rectangle {
                 id: delegateItem

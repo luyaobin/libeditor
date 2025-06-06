@@ -11,6 +11,16 @@
         <file>warelayout/Libraries.qml</file>
         <file>warelayout/EditorLabelModify.qml</file>
         <file>warelayout/EditorTagModify.qml</file>
+        <file>warehouse/IndexPage.qml</file>
+        <file>warehouse/WarehouseContent.qml</file>
+        <file>warehouse/ModuleLayout.qml</file>
+        <file>warehouse/ModuleArea.qml</file>
+        <file>warehouse/ModuleList.qml</file>
+        <file>warehouse/PointsArea.qml</file>
+        <file>warehouse/Libraries.qml</file>
+        <file>warehouse/ModuleInfo.qml</file>
+        <file>warehouse/EditorLabelModify.qml</file>
+        <file>warehouse/EditorTagModify.qml</file>
         <file>dummydata/serial.qml</file>
         <file>dummydata/callcom/serial.mjs</file>
         <file>dummydata/librariesModel.qml</file>
