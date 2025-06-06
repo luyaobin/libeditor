@@ -1,15 +1,6 @@
 import QtQuick 2.14
 
 QtObject {
-    // 发出信号通知数据已更新
-    // points = module.points;
-    // tags = module.tags;
-    // 检查points是否为数组
-    // 检查points是否为数组且索引有效
-    // return true;
-    // }
-    // return false;
-
     property string uuid: ""
     property int index: 0
     property real rx: 0
@@ -26,10 +17,10 @@ QtObject {
     property string site: ""
     property string strLight: ""
     property string strValue: ""
-    property var points: null
-    property var checks: null
-    property var airChecks: null
-    property var tags: null
+    property ListModel points: ListModel {}
+    property ListModel checks: ListModel {}
+    property ListModel airChecks: ListModel {}
+    property ListModel tags: ListModel {}
     property string base64: ""
 
     signal dataChanged
@@ -54,12 +45,42 @@ QtObject {
         site = module.site;
         strLight = module.strLight;
         strValue = module.strValue;
-        points = module.points;
-        checks = module.checks;
-        airChecks = module.airChecks;
-        tags = module.tags;
         base64 = module.base64 || "";
-        // console.log(module);
+
+        // 清空现有数据
+        points.clear();
+        checks.clear();
+        airChecks.clear();
+        tags.clear();
+
+        // 填充 points 数据
+        if (module.points && Array.isArray(module.points)) {
+            for (let i = 0; i < module.points.length; i++) {
+                points.append(module.points[i]);
+            }
+        }
+
+        // 填充 checks 数据
+        if (module.checks && Array.isArray(module.checks)) {
+            for (let i = 0; i < module.checks.length; i++) {
+                checks.append(module.checks[i]);
+            }
+        }
+
+        // 填充 airChecks 数据
+        if (module.airChecks && Array.isArray(module.airChecks)) {
+            for (let i = 0; i < module.airChecks.length; i++) {
+                airChecks.append(module.airChecks[i]);
+            }
+        }
+
+        // 填充 tags 数据
+        if (module.tags && Array.isArray(module.tags)) {
+            for (let i = 0; i < module.tags.length; i++) {
+                tags.append(module.tags[i]);
+            }
+        }
+
         selectFinishedChanged(module);
     }
 
@@ -148,7 +169,6 @@ QtObject {
 
     function saveToSettings() {
         // 这里实现保存到设置的逻辑
-        // 例如使用 Qt.labs.settings 或其他方法
         console.log("同步点位数据到设置");
         const moduleRef = {
             "uuid": uuid,

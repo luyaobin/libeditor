@@ -34,84 +34,6 @@ ColumnLayout {
             Item {
                 Layout.fillWidth: true
             }
-
-            Button {
-                text: "护套仓库"
-                implicitHeight: 32
-                onClicked: {
-                    console.log("打开护套仓库");
-                }
-
-                background: Rectangle {
-                    color: parent.hovered ? "#5a6268" : "#6c757d"
-                    radius: 4
-                }
-
-                contentItem: Text {
-                    text: parent.text
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: 12
-                }
-            }
-
-            Button {
-                text: "粘贴背景"
-                implicitHeight: 32
-                onClicked: moduleArea.pasteBackground()
-
-                background: Rectangle {
-                    color: parent.hovered ? "#0056b3" : "#007bff"
-                    radius: 4
-                }
-
-                contentItem: Text {
-                    text: parent.text
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: 12
-                }
-            }
-
-            Button {
-                text: "背景左转"
-                implicitHeight: 32
-                onClicked: moduleArea.leftTransparent()
-
-                background: Rectangle {
-                    color: parent.hovered ? "#138496" : "#17a2b8"
-                    radius: 4
-                }
-
-                contentItem: Text {
-                    text: parent.text
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: 12
-                }
-            }
-
-            Button {
-                text: "背景右转"
-                implicitHeight: 32
-                onClicked: moduleArea.rightTransparent()
-
-                background: Rectangle {
-                    color: parent.hovered ? "#138496" : "#17a2b8"
-                    radius: 4
-                }
-
-                contentItem: Text {
-                    text: parent.text
-                    color: "white"
-                    horizontalAlignment: Text.AlignHCenter
-                    verticalAlignment: Text.AlignVCenter
-                    font.pixelSize: 12
-                }
-            }
         }
     }
 
@@ -229,9 +151,9 @@ ColumnLayout {
                             Layout.fillWidth: true
                         }
                         Button {
-                            text: "×"
-                            implicitWidth: 20
-                            implicitHeight: 20
+                            text: "删除点位"
+                            implicitWidth: 100
+                            implicitHeight: 30
                             onClicked: pointsArea.pointDeleted(0)
 
                             background: Rectangle {
@@ -352,9 +274,9 @@ ColumnLayout {
     // 数据绑定函数
     function updateFields() {
         banSave = true;
-        metaTextField.text = moduleData.meta || "";
-        ioNumSpinBox.value = moduleData.ioNum || 0;
-        airCheckBox.checked = moduleData.airNum === 1;
+        // metaTextField.text = moduleData.meta || "";
+        // ioNumSpinBox.value = moduleData.ioNum || 0;
+        // airCheckBox.checked = moduleData.airNum === 1;
         banSave = false;
     }
 

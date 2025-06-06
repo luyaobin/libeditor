@@ -2,7 +2,6 @@ import QtQml.Models 2.14 // 使用此导入来支持 DelegateModelGroup
 import QtQuick 2.14
 import QtQuick.Controls 2.14
 import QtQuick.Layouts 1.14
-import qmlcpplib.qmlsystem 1.0
 
 Item {
     // 如果需要处理图片粘贴可以在这里添加相应的代码
@@ -36,76 +35,9 @@ Item {
         return closestIndex;
     }
 
-    onPasteBackground: {
-        qmlSystem.ctrlV();
-        backgroundImage.source = qmlSystem.image;
-        if (moduleData) {
-            moduleData.base64 = qmlSystem.image;
-            moduleData.dataChanged();
-        }
-        librariesView.hasBackground = true;
-    }
-    // 键盘事件处理，用于复制粘贴等操作
-    Keys.onPressed: function (event) {
-        if ((event.key === Qt.Key_V) && (event.modifiers & Qt.ControlModifier)) {
-            if (qmlSystem && typeof qmlSystem.ctrlV === "function") {
-                qmlSystem.ctrlV();
-                backgroundImage.source = qmlSystem.image;
-                if (moduleData) {
-                    moduleData.base64 = qmlSystem.image;
-                    moduleData.dataChanged();
-                }
-                librariesView.hasBackground = true;
-            }
-        }
-    }
-    Component.onCompleted: {
-        forceActiveFocus();
-    }
-    focus: true
-
-    // 添加QmlSystem
-    QmlSystem {
-        id: qmlSystem
-    }
-
-    // 主背景
-    Rectangle {
-        anchors.fill: parent
-        color: "#f8f9fa"
-
-        // 网格背景
-        Canvas {
-            anchors.fill: parent
-            opacity: 0.3
-            onPaint: {
-                var ctx = getContext("2d");
-                ctx.clearRect(0, 0, width, height);
-                ctx.strokeStyle = "#e9ecef";
-                ctx.lineWidth = 1;
-
-                // 绘制网格
-                for (var x = 0; x <= width; x += 20) {
-                    ctx.beginPath();
-                    ctx.moveTo(x, 0);
-                    ctx.lineTo(x, height);
-                    ctx.stroke();
-                }
-                for (var y = 0; y <= height; y += 20) {
-                    ctx.beginPath();
-                    ctx.moveTo(0, y);
-                    ctx.lineTo(width, y);
-                    ctx.stroke();
-                }
-            }
-        }
-    }
-
     // 背景图片容器 - 固定800x800尺寸
     Rectangle {
-        anchors.centerIn: parent
-        width: 800
-        height: 800
+        anchors.fill: parent
         color: "transparent"
         border.color: hasBackground ? "#409eff" : "#dcdfe6"
         border.width: hasBackground ? 2 : 1
@@ -125,10 +57,8 @@ Item {
 
         Image {
             id: backgroundImage
-            anchors.centerIn: parent
+            anchors.fill: parent
             fillMode: Image.PreserveAspectFit
-            width: Math.min(792, implicitWidth)
-            height: Math.min(792, implicitHeight)
 
             // 确保图片不会超出800x800的范围
             onImplicitWidthChanged: {
@@ -388,30 +318,6 @@ Item {
         }
     }
 
-    // 拖放区域
-    DropArea {
-        anchors.fill: parent
-        z: 0
-        onDropped: {
-            if (drop.hasUrls) {
-                var url = drop.urls[0];
-                if (url.toString().toLowerCase().match(/\.(jpg|jpeg|png|gif|bmp)$/)) {
-                    console.log("接收到图片文件:", url);
-                    backgroundImage.source = url.toString();
-                    librariesView.hasBackground = true;
-                    librariesView.backgroundChanged(url.toString());
-                    // 更新moduleData
-                    if (moduleData) {
-                        moduleData.base64 = url.toString();
-                        moduleData.dataChanged();
-                    }
-                }
-            } else {
-                console.log("droped", drop.text);
-            }
-        }
-    }
-
     // 没有背景时的提示区域
     Rectangle {
         anchors.centerIn: parent
@@ -508,9 +414,9 @@ Item {
             if (!currentModule)
                 return;
             banSave = true;
-            metaTextField.text = currentModule.meta || "";
+            // metaTextField.text = currentModule.meta || "";
             // ioNumSpinBox.value = currentModule.ioNum || 0;
-            airCheckBox.checked = currentModule.airNum === 1;
+            // airCheckBox.checked = currentModule.airNum === 1;
             banSave = false;
         }
 
@@ -681,460 +587,86 @@ Item {
                         }
                     }
 
-                    // 右侧信息和点位区域
-                    ColumnLayout {
+                    // 模块信息编辑区域
+                    Rectangle {
+
                         Layout.fillWidth: true
                         Layout.fillHeight: true
                         Layout.preferredWidth: 1
-                        spacing: 12
+                        color: "#ffffff"
+                        border.color: "#e0e0e0"
+                        border.width: 1
+                        radius: 8
+                        ModuleDetails {
+                            anchors.fill: parent
+                        }
+                    }
+                    // 点位列表区域
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        color: "#ffffff"
+                        border.color: "#e0e0e0"
+                        border.width: 1
+                        radius: 8
 
-                        // 模块信息编辑区域
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.preferredHeight: 320
-                            color: "#ffffff"
-                            border.color: "#e0e0e0"
-                            border.width: 1
-                            radius: 8
+                        ColumnLayout {
+                            anchors.fill: parent
+                            anchors.margins: 16
+                            spacing: 12
 
-                            ColumnLayout {
-                                anchors.fill: parent
-                                anchors.margins: 16
-                                spacing: 12
+                            RowLayout {
+                                Layout.fillWidth: true
 
-                                RowLayout {
-                                    Layout.fillWidth: true
-
-                                    Rectangle {
-                                        width: 24
-                                        height: 24
-                                        radius: 12
-                                        color: "#fff3e0"
-
-                                        Text {
-                                            anchors.centerIn: parent
-                                            text: "⚙"
-                                            font.pixelSize: 12
-                                        }
-                                    }
+                                Rectangle {
+                                    width: 24
+                                    height: 24
+                                    radius: 12
+                                    color: "#e8f5e8"
 
                                     Text {
-                                        text: "模块详情"
-                                        font.pixelSize: 16
-                                        font.bold: true
-                                        color: "#333333"
-                                        font.family: "Microsoft YaHei"
+                                        anchors.centerIn: parent
+                                        text: "📍"
+                                        font.pixelSize: 12
                                     }
                                 }
 
-                                ScrollView {
+                                Text {
+                                    text: "点位列表"
+                                    font.pixelSize: 16
+                                    font.bold: true
+                                    color: "#333333"
+                                    font.family: "Microsoft YaHei"
+                                }
+
+                                Item {
                                     Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    clip: true
+                                }
 
-                                    ColumnLayout {
-                                        width: parent.width
-                                        spacing: 12
+                                Rectangle {
+                                    height: 24
+                                    width: countText.width + 16
+                                    color: "#fff3e0"
+                                    radius: 12
 
-                                        // 模块型号
-                                        RowLayout {
-                                            Layout.fillWidth: true
-                                            spacing: 12
-
-                                            Text {
-                                                text: "模块型号:"
-                                                font.pixelSize: 14
-                                                color: "#333333"
-                                                font.bold: true
-                                                font.family: "Microsoft YaHei"
-                                                Layout.preferredWidth: 80
-                                            }
-
-                                            TextField {
-                                                id: metaTextField
-                                                Layout.fillWidth: true
-                                                text: ""
-                                                placeholderText: "请输入模块型号"
-                                                font.pixelSize: 12
-                                                font.family: "Microsoft YaHei"
-                                                onTextChanged: {
-                                                    if (moduleDetailPopup.banSave || !moduleDetailPopup.currentModule)
-                                                        return;
-                                                    moduleDetailPopup.currentModule.meta = text;
-                                                    if (typeof moduleDetailPopup.currentModule.dataChanged === "function") {
-                                                        moduleDetailPopup.currentModule.dataChanged();
-                                                    }
-                                                }
-
-                                                background: Rectangle {
-                                                    color: "#ffffff"
-                                                    border.color: parent.focus ? "#409eff" : "#dcdfe6"
-                                                    border.width: parent.focus ? 2 : 1
-                                                    radius: 6
-                                                }
-                                            }
-                                        }
-
-                                        // 锁片对数
-                                        RowLayout {
-                                            Layout.fillWidth: true
-                                            spacing: 12
-
-                                            Text {
-                                                text: "锁片对数:"
-                                                font.pixelSize: 14
-                                                color: "#333333"
-                                                font.bold: true
-                                                font.family: "Microsoft YaHei"
-                                                Layout.preferredWidth: 80
-                                            }
-
-                                            RowLayout {
-                                                Layout.fillWidth: true
-                                                spacing: 6
-
-                                                Repeater {
-                                                    model: 7
-
-                                                    delegate: Rectangle {
-                                                        width: 32
-                                                        height: 32
-                                                        color: index === (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum : 0) ? "#409eff" : "#f8f9fa"
-                                                        border.color: index === (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum : 0) ? "#409eff" : "#e0e0e0"
-                                                        border.width: 2
-                                                        radius: 6
-
-                                                        Text {
-                                                            anchors.centerIn: parent
-                                                            text: index
-                                                            font.pixelSize: 12
-                                                            font.bold: true
-                                                            font.family: "Microsoft YaHei"
-                                                            color: index === (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum : 0) ? "white" : "#666666"
-                                                        }
-
-                                                        MouseArea {
-                                                            anchors.fill: parent
-                                                            hoverEnabled: true
-                                                            onEntered: {
-                                                                if (index !== (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum : 0)) {
-                                                                    parent.border.color = "#409eff";
-                                                                    parent.color = "#e3f2fd";
-                                                                }
-                                                            }
-                                                            onExited: {
-                                                                if (index !== (moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.lockNum : 0)) {
-                                                                    parent.border.color = "#e0e0e0";
-                                                                    parent.color = "#f8f9fa";
-                                                                }
-                                                            }
-                                                            onClicked: {
-                                                                if (moduleDetailPopup.currentModule) {
-                                                                    moduleDetailPopup.currentModule.lockNum = index;
-                                                                    if (typeof moduleDetailPopup.currentModule.dataChanged === "function") {
-                                                                        moduleDetailPopup.currentModule.dataChanged();
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        // 气密存在
-                                        RowLayout {
-                                            Layout.fillWidth: true
-                                            spacing: 12
-                                            enabled: false
-
-                                            Text {
-                                                text: "气密存在:"
-                                                font.pixelSize: 14
-                                                color: "#333333"
-                                                font.bold: true
-                                                font.family: "Microsoft YaHei"
-                                                Layout.preferredWidth: 80
-                                            }
-
-                                            CheckBox {
-                                                id: airCheckBox
-                                                checked: false
-                                                text: "存在气密"
-                                                font.pixelSize: 12
-                                                font.family: "Microsoft YaHei"
-                                                onCheckedChanged: {
-                                                    if (moduleDetailPopup.banSave || !moduleDetailPopup.currentModule)
-                                                        return;
-                                                    moduleDetailPopup.currentModule.airNum = checked ? 1 : 0;
-                                                    if (typeof moduleDetailPopup.currentModule.dataChanged === "function") {
-                                                        moduleDetailPopup.currentModule.dataChanged();
-                                                    }
-                                                }
-                                            }
-                                        }
-
-                                        Text {
-                                            text: "模块位置:"
-                                            font.pixelSize: 14
-                                            color: "#333333"
-                                            font.bold: true
-                                            font.family: "Microsoft YaHei"
-                                        }
-
-                                        TextField {
-                                            id: siteTextField
-
-                                            Layout.fillWidth: true
-                                            text: ""
-                                            placeholderText: "请输入模块位置(可不填)"
-                                            font.pixelSize: 12
-                                            font.family: "Microsoft YaHei"
-                                            onTextChanged: {
-                                                if (banSave)
-                                                    return;
-
-                                                moduleData.site = text;
-                                                moduleData.dataChanged();
-                                            }
-
-                                            background: Rectangle {
-                                                color: "#ffffff"
-                                                border.color: parent.focus ? "#409eff" : "#dcdfe6"
-                                                border.width: parent.focus ? 2 : 1
-                                                radius: 6
-                                            }
-                                        }
-
-                                        Text {
-                                            text: "模块灯号:"
-                                            font.pixelSize: 14
-                                            color: "#333333"
-                                            font.bold: true
-                                            font.family: "Microsoft YaHei"
-                                        }
-
-                                        TextField {
-                                            id: strLightTextField
-
-                                            Layout.fillWidth: true
-                                            text: ""
-                                            placeholderText: "请输入模块灯号(可忽略)"
-                                            font.pixelSize: 12
-                                            font.family: "Microsoft YaHei"
-                                            onTextChanged: {
-                                                if (banSave)
-                                                    return;
-
-                                                moduleData.strLight = text;
-                                                moduleData.dataChanged();
-                                            }
-
-                                            background: Rectangle {
-                                                color: "#ffffff"
-                                                border.color: parent.focus ? "#409eff" : "#dcdfe6"
-                                                border.width: parent.focus ? 2 : 1
-                                                radius: 6
-                                            }
-                                        }
-
-                                        Text {
-                                            text: "起点点位:"
-                                            font.pixelSize: 14
-                                            color: "#333333"
-                                            font.bold: true
-                                            font.family: "Microsoft YaHei"
-                                        }
-
-                                        TextField {
-                                            id: strValueTextField
-
-                                            Layout.fillWidth: true
-                                            text: ""
-                                            placeholderText: "请输入起点点位(必填)"
-                                            font.pixelSize: 12
-                                            font.family: "Microsoft YaHei"
-                                            onTextChanged: {
-                                                if (banSave)
-                                                    return;
-
-                                                moduleData.strValue = text;
-                                                moduleData.dataChanged();
-                                            }
-
-                                            background: Rectangle {
-                                                color: "#ffffff"
-                                                border.color: parent.focus ? "#409eff" : "#dcdfe6"
-                                                border.width: parent.focus ? 2 : 1
-                                                radius: 6
-                                            }
-                                        }
-
-                                        Text {
-                                            text: "探点数据:"
-                                            font.pixelSize: 14
-                                            color: "#333333"
-                                            font.bold: true
-                                            font.family: "Microsoft YaHei"
-                                        }
-
-                                        Rectangle {
-                                            Layout.fillWidth: true
-                                            height: 40
-                                            color: "#f8f9fa"
-                                            border.color: "#e0e0e0"
-                                            border.width: 1
-                                            radius: 6
-
-                                            RowLayout {
-                                                anchors.fill: parent
-                                                anchors.margins: 8
-                                                spacing: 8
-
-                                                ListView {
-                                                    Layout.fillWidth: true
-                                                    Layout.fillHeight: true
-                                                    model: serial.probeListModel
-                                                    orientation: ListView.Horizontal
-                                                    spacing: 6
-                                                    clip: true
-                                                    onCountChanged: {
-                                                        console.log("探针数据列表数量:", count);
-                                                        if (count === 1 && autoFillCheckBox.checked)
-                                                            strValueTextField.text = serial.probeListModel.get(0).chunk;
-                                                    }
-
-                                                    delegate: Rectangle {
-                                                        height: 24
-                                                        width: 80
-                                                        radius: 12
-                                                        color: "#e3f2fd"
-                                                        border.color: "#2196f3"
-                                                        border.width: 1
-
-                                                        Text {
-                                                            anchors.centerIn: parent
-                                                            text: model.chunk
-                                                            font.pixelSize: 10
-                                                            font.family: "Microsoft YaHei"
-                                                            color: "#1976d2"
-                                                        }
-                                                    }
-                                                }
-
-                                                Button {
-                                                    id: fillProbeButton
-
-                                                    text: "填入"
-                                                    implicitHeight: 24
-                                                    implicitWidth: 50
-                                                    onClicked: {
-                                                        if (serial.probeListModel.count > 0)
-                                                            strValueTextField.text = serial.probeListModel.get(0).chunk;
-                                                    }
-
-                                                    background: Rectangle {
-                                                        color: parent.hovered ? "#409eff" : "#66b1ff"
-                                                        radius: 4
-                                                    }
-
-                                                    contentItem: Text {
-                                                        text: parent.text
-                                                        color: "white"
-                                                        horizontalAlignment: Text.AlignHCenter
-                                                        verticalAlignment: Text.AlignVCenter
-                                                        font.pixelSize: 10
-                                                        font.family: "Microsoft YaHei"
-                                                        font.bold: true
-                                                    }
-                                                }
-
-                                                CheckBox {
-                                                    id: autoFillCheckBox
-
-                                                    text: "自动填入"
-                                                    font.pixelSize: 10
-                                                    font.family: "Microsoft YaHei"
-                                                    onCheckedChanged: {
-                                                        console.log("autoFillCheckBox", checked, serial.probeListModel.count);
-                                                        if (checked && serial.probeListModel.count === 1)
-                                                            strValueTextField.text = serial.probeListModel.get(0).chunk;
-                                                    }
-                                                }
-                                            }
-                                        }
+                                    Text {
+                                        id: countText
+                                        anchors.centerIn: parent
+                                        text: "共 " + (moduleDetailPopup.currentModule && moduleDetailPopup.currentModule.points ? moduleDetailPopup.currentModule.points.count : 0) + " 个"
+                                        font.pixelSize: 12
+                                        color: "#ff9800"
+                                        font.family: "Microsoft YaHei"
+                                        font.bold: true
                                     }
                                 }
                             }
-                        }
 
-                        // 点位列表区域
-                        Rectangle {
-                            Layout.fillWidth: true
-                            Layout.fillHeight: true
-                            color: "#ffffff"
-                            border.color: "#e0e0e0"
-                            border.width: 1
-                            radius: 8
-
-                            ColumnLayout {
-                                anchors.fill: parent
-                                anchors.margins: 16
-                                spacing: 12
-
-                                RowLayout {
-                                    Layout.fillWidth: true
-
-                                    Rectangle {
-                                        width: 24
-                                        height: 24
-                                        radius: 12
-                                        color: "#e8f5e8"
-
-                                        Text {
-                                            anchors.centerIn: parent
-                                            text: "📍"
-                                            font.pixelSize: 12
-                                        }
-                                    }
-
-                                    Text {
-                                        text: "点位列表"
-                                        font.pixelSize: 16
-                                        font.bold: true
-                                        color: "#333333"
-                                        font.family: "Microsoft YaHei"
-                                    }
-
-                                    Item {
-                                        Layout.fillWidth: true
-                                    }
-
-                                    Rectangle {
-                                        height: 24
-                                        width: countText.width + 16
-                                        color: "#fff3e0"
-                                        radius: 12
-
-                                        Text {
-                                            id: countText
-                                            anchors.centerIn: parent
-                                            text: "共 " + (moduleDetailPopup.currentModule && moduleDetailPopup.currentModule.points ? moduleDetailPopup.currentModule.points.count : 0) + " 个"
-                                            font.pixelSize: 12
-                                            color: "#ff9800"
-                                            font.family: "Microsoft YaHei"
-                                            font.bold: true
-                                        }
-                                    }
-                                }
-
-                                PointsArea {
-                                    id: popupPointsArea
-                                    Layout.fillWidth: true
-                                    Layout.fillHeight: true
-                                    points: moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.points : []
-                                    isEditing: true
-                                }
+                            PointsArea {
+                                id: popupPointsArea
+                                Layout.fillWidth: true
+                                Layout.fillHeight: true
+                                points: moduleDetailPopup.currentModule ? moduleDetailPopup.currentModule.points : []
+                                isEditing: true
                             }
                         }
                     }
@@ -1215,11 +747,11 @@ Item {
         }
 
         // 监听模块数据变化
-        Connections {
-            target: moduleDetailPopup.currentModule
-            function onDataChanged() {
-                moduleDetailPopup.updateFields();
-            }
-        }
+        // Connections {
+        //     target: moduleDetailPopup.currentModule
+        //     function onDataChanged() {
+        //         moduleDetailPopup.updateFields();
+        //     }
+        // }
     }
 }

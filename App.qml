@@ -11,7 +11,7 @@ Window {
                 height = 1040;
             }
         } catch (error) {
-            const i = 1;
+            const i = 2;
             width = Qt.application.screens[i].width - 16;
             height = Qt.application.screens[i].height - 80;
             flags = Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint;

@@ -125,7 +125,8 @@ Rectangle {
             moduleModel.setProperty(index, "ioNum", ioNum);
             moduleModel.setProperty(index, "lockNum", lockNum);
             moduleModel.setProperty(index, "airNum", airNum);
-            // 自动创建点位
+
+            // 自动创建点位数组
             const pointsArray = [];
             for (let i = 0; i < ioNum; i++) {
                 pointsArray.push({
@@ -160,23 +161,27 @@ Rectangle {
                     "ry": 0
                 });
             }
-            moduleRef.points.append(pointsArray);
-            moduleRef.checks.append(checksArray);
-            moduleRef.airChecks.append(airChecksArray);
+
+            // 直接设置属性而不是 append
+            moduleModel.setProperty(index, "points", pointsArray);
+            moduleModel.setProperty(index, "checks", checksArray);
+            moduleModel.setProperty(index, "airChecks", airChecksArray);
+
+            // 保存到设置
             const newModule = {
                 "uuid": moduleRef.uuid,
-                "rx": 0,
-                "ry": 0,
-                "rwidth": 0,
-                "rheight": 0,
-                "ioNum": moduleRef.ioNum,
-                "lockNum": moduleRef.lockNum,
-                "airNum": moduleRef.airNum,
+                "rx": moduleRef.rx,
+                "ry": moduleRef.ry,
+                "rwidth": moduleRef.rwidth,
+                "rheight": moduleRef.rheight,
+                "ioNum": ioNum,
+                "lockNum": lockNum,
+                "airNum": airNum,
                 "scale": moduleRef.scale,
-                "name": moduleRef.name,
-                "code": moduleRef.code,
+                "name": name,
+                "code": code,
                 "site": moduleRef.site,
-                "meta": moduleRef.meta,
+                "meta": meta,
                 "strLight": moduleRef.strLight,
                 "strValue": moduleRef.strValue,
                 "points": pointsArray,
@@ -184,7 +189,7 @@ Rectangle {
                 "airChecks": airChecksArray,
                 "tags": [],
                 "base64": moduleRef.base64,
-                "nstate": 0
+                "nstate": moduleRef.nstate
             };
             moduleListSettings.setValue(moduleRef.uuid, JSON.stringify(newModule));
         }
@@ -195,35 +200,101 @@ Rectangle {
         const points = [];
         const checks = [];
         const airChecks = [];
-        for (let i = 0; i < module.tags.count; i++) {
-            tags.push({
-                "tag": module.tags.get(i).tag
-            });
+
+        // 处理 tags
+        if (module.tags) {
+            if (typeof module.tags.count !== 'undefined') {
+                // ListModel 类型
+                for (let i = 0; i < module.tags.count; i++) {
+                    tags.push({
+                        "tag": module.tags.get(i).tag
+                    });
+                }
+            } else if (Array.isArray(module.tags)) {
+                // 数组类型
+                for (let i = 0; i < module.tags.length; i++) {
+                    tags.push({
+                        "tag": module.tags[i].tag
+                    });
+                }
+            }
         }
-        for (let i = 0; i < module.points.count; i++) {
-            const point = module.points.get(i);
-            points.push({
-                "name": point.name,
-                "rx": point.rx,
-                "ry": point.ry
-            });
+
+        // 处理 points
+        if (module.points) {
+            if (typeof module.points.count !== 'undefined') {
+                // ListModel 类型
+                for (let i = 0; i < module.points.count; i++) {
+                    const point = module.points.get(i);
+                    points.push({
+                        "name": point.name,
+                        "rx": point.rx,
+                        "ry": point.ry
+                    });
+                }
+            } else if (Array.isArray(module.points)) {
+                // 数组类型
+                for (let i = 0; i < module.points.length; i++) {
+                    const point = module.points[i];
+                    points.push({
+                        "name": point.name,
+                        "rx": point.rx,
+                        "ry": point.ry
+                    });
+                }
+            }
         }
-        for (let i = 0; i < module.checks.count; i++) {
-            const check = module.checks.get(i);
-            checks.push({
-                "name": check.name,
-                "rx": check.rx,
-                "ry": check.ry
-            });
+
+        // 处理 checks
+        if (module.checks) {
+            if (typeof module.checks.count !== 'undefined') {
+                // ListModel 类型
+                for (let i = 0; i < module.checks.count; i++) {
+                    const check = module.checks.get(i);
+                    checks.push({
+                        "name": check.name,
+                        "rx": check.rx,
+                        "ry": check.ry
+                    });
+                }
+            } else if (Array.isArray(module.checks)) {
+                // 数组类型
+                for (let i = 0; i < module.checks.length; i++) {
+                    const check = module.checks[i];
+                    checks.push({
+                        "name": check.name,
+                        "rx": check.rx,
+                        "ry": check.ry
+                    });
+                }
+            }
         }
-        for (let i = 0; i < module.airChecks.count; i++) {
-            const airCheck = module.airChecks.get(i);
-            airChecks.push({
-                "name": airCheck.name,
-                "rx": airCheck.rx,
-                "ry": airCheck.ry
-            });
+
+        // 处理 airChecks
+        if (module.airChecks) {
+            if (typeof module.airChecks.count !== 'undefined') {
+                // ListModel 类型
+                for (let i = 0; i < module.airChecks.count; i++) {
+                    const airCheck = module.airChecks.get(i);
+                    airChecks.push({
+                        "name": airCheck.name,
+                        "rx": airCheck.rx,
+                        "ry": airCheck.ry
+                    });
+                }
+            } else if (Array.isArray(module.airChecks)) {
+                // 数组类型
+                for (let i = 0; i < module.airChecks.length; i++) {
+                    const airCheck = module.airChecks[i];
+                    airChecks.push({
+                        "name": airCheck.name,
+                        "rx": airCheck.rx,
+                        "ry": airCheck.ry
+                    });
+                }
+            }
         }
+
         const result = {
             "uuid": module.uuid,
             "rx": module.rx,

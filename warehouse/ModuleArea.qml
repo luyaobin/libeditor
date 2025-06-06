@@ -292,7 +292,7 @@ Rectangle {
         Text {
             id: statusText
             anchors.centerIn: parent
-            text: "点位数: " + moduleArea.points.length + " | 双击添加点位 | 拖拽移动点位"
+            text: "双击添加点位 | 拖拽移动点位"
             color: "white"
             font.pixelSize: 11
         }

@@ -6,7 +6,7 @@ import QtQml.Models 2.14
 Rectangle {
     id: pointsArea
 
-    property var points: []
+    property var points: null
     property bool isEditing: true
     property int currentPointIndex: -1
 

@@ -4,6 +4,7 @@ import QtQuick.Dialogs 1.3
 import QtQuick.Layouts 1.14
 import QtQuick.LocalStorage 2.14
 import QtQuick.Window 2.14
+import "./loopeditor" as LoopEditor
 
 // import qmlcpplib.qmlsystem 1.0
 
@@ -33,9 +34,6 @@ Page {
                 Layout.fillHeight: true
                 Layout.preferredHeight: 1
             }
-            // ModuleInfo {
-            //     anchors.fill: parent
-            // }
         }
 
         ColumnLayout {
@@ -47,6 +45,16 @@ Page {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredHeight: 2
+            }
+
+            Item {
+
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredHeight: 1
+                LoopEditor.IndexPage {
+                    anchors.fill: parent
+                }
             }
         }
     }

@@ -6,7 +6,7 @@ import qmlcpplib.qmlsystem 1.0
 Rectangle {
     id: moduleArea
 
-    property var points: []
+    property var points: null
     property alias backgroundSource: backgroundImage.source
     property bool hasBackground: backgroundImage.source != ""
     property bool isEditing: true

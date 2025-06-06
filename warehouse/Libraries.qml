@@ -233,7 +233,7 @@ Item {
                         width: 40
                         height: 40
                         radius: 20
-                        color: getModuleColor(index)
+                        color: getModuleColor(0)
 
                         Text {
                             anchors.centerIn: parent
