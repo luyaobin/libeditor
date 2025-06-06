@@ -1,0 +1,15 @@
+{
+  "projectName": "123",
+  "description": "",
+  "version": "1.0.0",
+  "createTime": "2025-06-06 11:56:39",
+  "updateTime": "2025-06-06 11:56:39",
+  "modules": [],
+  "points": [],
+  "loops": [],
+  "config": {
+    "autoSave": true,
+    "backupEnabled": true,
+    "maxHistory": 50
+  }
+}

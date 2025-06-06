@@ -22,6 +22,7 @@ QtObject {
     property ListModel airChecks: ListModel {}
     property ListModel tags: ListModel {}
     property string base64: ""
+    property string currentProject: ""
 
     signal dataChanged
     signal selectFinishedChanged(var module)

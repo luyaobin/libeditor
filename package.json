@@ -1,0 +1,16 @@
+{
+  "name": "libeditor",
+  "version": "1.0.0",
+  "description": "功能要求:\r 1. 编辑要求:\r     有多个项目, 能新建项目, 复制项目, 删除项目\r     项目内容组成为:",
+  "main": "index.js",
+  "scripts": {
+    "dev": "run.bat",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitee.com/luyaobin/libeditor.git"
+  },
+  "author": "",
+  "license": "ISC"
+}

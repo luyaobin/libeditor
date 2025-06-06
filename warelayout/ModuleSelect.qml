@@ -25,20 +25,21 @@ Popup {
         border.width: 2
     }
 
-    // 键盘事件处理
-    Keys.onPressed: {
-        if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
-            if (selectedModule !== null) {
-                addSelectedModuleToProject();
-                event.accepted = true;
-            }
-        }
-    }
-
     ColumnLayout {
         anchors.fill: parent
         anchors.margins: 20
         spacing: 15
+        focus: true
+
+        // 键盘事件处理
+        Keys.onPressed: {
+            if (event.key === Qt.Key_Return || event.key === Qt.Key_Enter) {
+                if (selectedModule !== null) {
+                    addSelectedModuleToProject();
+                    event.accepted = true;
+                }
+            }
+        }
 
         // 标题栏
         Rectangle {
@@ -601,7 +602,7 @@ Popup {
                     }
 
                     Text {
-                        text: "可用模块: " + (librariesModel ? librariesModel.moduleModel.count : 0) + " 个 | 项目中已有: " + (projects ? projects.currentProjectModules.count : 0) + " 个"
+                        text: "可用模块: " + (librariesModel ? librariesModel.moduleModel.count : 0) + " 个 | 项目中已有: " + (projectsModel ? projectsModel.currentProjectModules.count : 0) + " 个"
                         font.pixelSize: 10
                         color: "#6c757d"
                     }

@@ -436,7 +436,7 @@ Item {
                                     verticalAlignment: TextInput.AlignVCenter
 
                                     onTextChanged: {
-                                        if (banSave)
+                                        if (moduleDetailPopup.banSave)
                                             return;
                                         var displayIndex = parseInt(text) || 1;
                                         if (displayIndex < 1)
