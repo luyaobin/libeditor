@@ -2,15 +2,25 @@
     <qresource prefix="/">
         <file>App.qml</file>
         <file>MainPage.qml</file>
+        <file>ProgramModel.qml</file>
+        <file>wareproject/ProgramModel.qml</file>
+        <file>wareproject/ProjectManager.qml</file>
+        <file>wareproject/ProjectConfig.qml</file>
+        <file>wareproject/ProjectStats.qml</file>
+        <file>wareproject/ProjectWorkspace.qml</file>
         <file>warelayout/IndexPage.qml</file>
         <file>warelayout/ModuleInfo.qml</file>
+        <file>warelayout/ModuleDetails.qml</file>
         <file>warelayout/ModuleLayout.qml</file>
         <file>warelayout/ModuleArea.qml</file>
         <file>warelayout/ModuleList.qml</file>
         <file>warelayout/PointsArea.qml</file>
         <file>warelayout/Libraries.qml</file>
+        <file>warelayout/ListError.qml</file>
+        <file>warelayout/ModuleSelect.qml</file>
         <file>warelayout/EditorLabelModify.qml</file>
         <file>warelayout/EditorTagModify.qml</file>
+        <file>warelayout/loopeditor/IndexPage.qml</file>
         <file>warehouse/IndexPage.qml</file>
         <file>warehouse/WarehouseContent.qml</file>
         <file>warehouse/ModuleLayout.qml</file>

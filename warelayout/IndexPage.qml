@@ -6,6 +6,7 @@ import QtQuick.LocalStorage 2.14
 import QtQuick.Window 2.14
 import "./loopeditor" as LoopEditor
 import "../warehouse" as Warehouse
+import "../wareproject" as WareProject
 
 // import qmlcpplib.qmlsystem 1.0
 
@@ -13,6 +14,23 @@ Page {
     // 直接使用原始模型
 
     id: mainPage
+
+    // 程序数据模型
+    WareProject.ProgramModel {
+        id: programModel
+
+        // onProjectChanged: function (projectName) {
+        //     console.log("项目已切换到:", projectName);
+        // }
+
+        // onDataLoaded: {
+        //     console.log("项目数据加载完成");
+        // }
+
+        // onDataError: function (message) {
+        //     console.error("数据错误:", message);
+        // }
+    }
 
     RowLayout {
         anchors.fill: parent

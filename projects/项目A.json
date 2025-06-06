@@ -1,0 +1,14 @@
+{
+    "projectName": "项目A",
+    "description": "测试项目A的描述",
+    "createTime": "2024-01-01",
+    "modules": [
+        {
+            "id": "module_001",
+            "name": "模块1",
+            "type": "sensor",
+            "config": {}
+        }
+    ],
+    "version": "1.0.0"
+}
